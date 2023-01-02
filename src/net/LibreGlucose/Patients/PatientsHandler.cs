@@ -1,6 +1,6 @@
 ﻿using System.Net.Http.Json;
 
-namespace PleOps.LibreGlucose.Patiens;
+namespace PleOps.LibreGlucose.Patients;
 
 public class PatientsHandler
 {

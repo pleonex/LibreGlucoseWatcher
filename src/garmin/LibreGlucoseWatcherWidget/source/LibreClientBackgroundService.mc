@@ -23,7 +23,7 @@ import Toybox.Communications;
 import Toybox.Lang;
 
 (:background)
-var token as String;
+var token as String or Null;
 
 (:background)
 var expirationTime;
@@ -50,7 +50,6 @@ class LibreClientBackgroundService extends System.ServiceDelegate
             $.token = Storage.getValue("libretoken");
         }
 
-        // TODO: Check if login is valid (by expiration date)
         if ($.token == null) {
             loginAndQuery();
         } else {
@@ -58,13 +57,16 @@ class LibreClientBackgroundService extends System.ServiceDelegate
         }
     }
 
-    function onReceivedConnectionInfo(responseCode as Number, data as Dictionary?) as Void {
+    function onReceivedConnectionInfo(responseCode as Number, data as Dictionary or Null or String) as Void {
         if (responseCode == 200) {
             lastMeasurement = data["data"][0]["glucoseMeasurement"]["ValueInMgPerDl"];
             System.println("Query successful. Last measurement: " + lastMeasurement);
             Background.exit(lastMeasurement);
         } else {
             System.println("Failed to get sugar measurement: " + responseCode);
+
+            $.token = null;
+            Storage.setValue("libretoken", $.token);
         }
     }
 
@@ -74,14 +76,9 @@ class LibreClientBackgroundService extends System.ServiceDelegate
         var options = {
             :method => Communications.HTTP_REQUEST_METHOD_GET,
             :headers => {
-                "User-Agent" => userAgent,
                 "Content-Type" => Communications.REQUEST_CONTENT_TYPE_JSON,
                 "version" => libreLinkUpVersion,
                 "product" => libreLinkUpProduct,
-                "Accept-Encoding" => "gzip, deflate, br",
-                "Connection" => "keep-alive",
-                "Pragma" => "no-cache",
-                "Cache-Control" => "no-cache",
                 "Authorization" => "Bearer " + $.token
             },
             :responseType => Communications.HTTP_RESPONSE_CONTENT_TYPE_JSON
@@ -90,13 +87,11 @@ class LibreClientBackgroundService extends System.ServiceDelegate
         Communications.makeWebRequest(url, null, options, method(:onReceivedConnectionInfo));
     }
 
-    function onReceivedLogin(responseCode as Number, data as Dictionary?) as Void {
+    function onReceivedLogin(responseCode as Number, data as Dictionary or Null or String) as Void {
         if (responseCode == 200) {
             System.println("Login successful");
-
             $.token = data["data"]["authTicket"]["token"];
             Storage.setValue("libretoken", $.token);
-            System.println("Token: " + $.token);
 
             query();
         } else {
@@ -110,19 +105,14 @@ class LibreClientBackgroundService extends System.ServiceDelegate
         var options = {
             :method => Communications.HTTP_REQUEST_METHOD_POST,
             :headers => {
-                "User-Agent" => userAgent,
                 "Content-Type" => Communications.REQUEST_CONTENT_TYPE_JSON,
                 "version" => libreLinkUpVersion,
                 "product" => libreLinkUpProduct,
-                "Accept-Encoding" => "gzip, deflate, br",
-                "Connection" => "keep-alive",
-                "Pragma" => "no-cache",
-                "Cache-Control" => "no-cache"
             },
             :responseType => Communications.HTTP_RESPONSE_CONTENT_TYPE_JSON
         };
 
-        var params = {                                              // set the parameters
+        var params = {
             "email" => "YOUR_EMAIL",
             "password" => "YOUR_PASSWORD"
         };

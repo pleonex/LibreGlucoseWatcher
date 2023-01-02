@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 using PleOps.LibreGlucose.Connection;
 
-namespace PleOps.LibreGlucose.Patiens;
+namespace PleOps.LibreGlucose.Patients;
 
 public record PatientsResult
 {
