@@ -15,4 +15,4 @@ public record TwoFactorAuthParameters(
 
 public record UserInfo(string? AccountType, string? Country, string? UiLanguage);
 
-public record TicketInfo(string? Token, int Expires, int Duration);
+public record TicketInfo(string? Token, long Expires, long Duration);

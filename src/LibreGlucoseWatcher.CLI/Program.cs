@@ -18,7 +18,7 @@ try
         }
         else
         {
-            client.Connection.AuthenticationData = authData;
+            client.Login.AuthenticationData = authData;
             logged = true;
             AnsiConsole.MarkupLine("[green]Valid token[/]");
         }
@@ -27,9 +27,12 @@ try
     if (!logged)
     {
         await Login().ConfigureAwait(false);
-        var authData = client.Connection.AuthenticationData;
+        var authData = client.Login.AuthenticationData;
         await AuthFileEncryption.WriteToken(authData).ConfigureAwait(false);
     }
+
+    var patients = await client.Patients.Get().ConfigureAwait(false);
+    AnsiConsole.MarkupLine("[green]Glucose: {0} mg/dL[/]", patients.Data[0].GlucoseMeasurement.ValueInMgPerDl);
 }
 catch (Exception ex)
 {
@@ -47,12 +50,12 @@ async Task Login()
         new TextPrompt<string>("LibreView [yellow]password[/]:")
             .PromptStyle("red")
             .Secret());
-    var parameters = new ConnectionParameters(email, password);
+    var parameters = new LoginParameters(email, password);
 
     await AnsiConsole.Status()
         .StartAsync(
             "Login...",
-            async ctx => await client.Connection.LoginAsync(parameters).ConfigureAwait(false))
+            async ctx => await client.Login.LoginAsync(parameters).ConfigureAwait(false))
         .ConfigureAwait(false);
     AnsiConsole.MarkupLine("[green]Succeed :check_mark:[/]");
 }

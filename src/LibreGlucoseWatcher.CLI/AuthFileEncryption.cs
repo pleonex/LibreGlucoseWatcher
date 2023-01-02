@@ -15,13 +15,25 @@ public static class AuthFileEncryption
             File.Decrypt(AuthPath);
         }
 
-        string authJson = await File.ReadAllTextAsync(AuthPath).ConfigureAwait(false);
+        string authJson;
+        try
+        {
+            authJson = await File.ReadAllTextAsync(AuthPath).ConfigureAwait(false);
+        }
+        finally
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                File.Encrypt(AuthPath);
+            }
+        }
+
         var authData = JsonSerializer.Deserialize<AuthData>(authJson);
 
         if (authData?.AuthTicket?.Expires is not null)
         {
             var expiration = DateTimeOffset.FromUnixTimeSeconds(authData.AuthTicket.Expires)
-                .AddSeconds(authData.AuthTicket.Duration);
+                .AddMilliseconds(authData.AuthTicket.Duration);
             if (DateTimeOffset.UtcNow > expiration)
             {
                 return null;
