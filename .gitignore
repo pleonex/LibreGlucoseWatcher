@@ -1,3 +1,8 @@
 # Binaries
 *.prg
 *.prg.debug.xml
+
+# .NET
+bin/
+obj/
+.vs/
