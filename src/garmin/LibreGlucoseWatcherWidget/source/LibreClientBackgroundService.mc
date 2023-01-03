@@ -81,6 +81,8 @@ class LibreClientBackgroundService extends System.ServiceDelegate
 
     function query(token as String) as Void {
         System.println("Querying...");
+        LibreGlucoseStorage.setRequestStatus(LibreGlucoseStorage.REQUEST_IN_PROGRESS);
+
         var url = libreLinkUpUrl + "llu/connections";
         var options = {
             :method => Communications.HTTP_REQUEST_METHOD_GET,

@@ -23,6 +23,7 @@ module LibreGlucoseStorage
         REQUEST_SUCCESS = 1,
         REQUEST_INVALID_DATA = 2,
         REQUEST_INVALID_PATNUM = 3,
+        REQUEST_IN_PROGRESS = 4,
     }
 
     enum SugarUnits {
@@ -34,7 +35,12 @@ module LibreGlucoseStorage
         Storage.setValue(LOGIN_STATUS_PROPNAME, status);
     }
     function getLoginStatus() as LoginStatus {
-        return Storage.getValue(LOGIN_STATUS_PROPNAME) as LoginStatus;
+        var status = Storage.getValue(LOGIN_STATUS_PROPNAME);
+        if (status == null) {
+            return LOGIN_IN_PROGRESS;
+        }
+
+        return status as LoginStatus;
     }
 
     function setToken(token as String) as Void {
@@ -51,7 +57,12 @@ module LibreGlucoseStorage
         Storage.setValue(REQUEST_STATUS_PROPNAME, status);
     }
     function getRequestStatus() as RequestStatus {
-        return Storage.getValue(REQUEST_STATUS_PROPNAME) as RequestStatus;
+        var status = Storage.getValue(REQUEST_STATUS_PROPNAME);
+        if (status == null) {
+            return REQUEST_IN_PROGRESS;
+        }
+
+        return status as RequestStatus;
     }
 
     function setSugarValue(mgDl as String, mmolL as String) as Void {

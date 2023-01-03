@@ -85,6 +85,10 @@ class WidgetView extends WatchUi.View {
                 drawMessage(dc, "Invalid patient\nnumber. Review\napp settings");
                 break;
 
+            case LibreGlucoseStorage.REQUEST_IN_PROGRESS:
+                drawMessage(dc, "Fetching sugar");
+                break;
+
             case LibreGlucoseStorage.REQUEST_SUCCESS:
                 var sugar = LibreGlucoseStorage.getSugarValue();
                 var text = "Glucose:\n" + sugar;
