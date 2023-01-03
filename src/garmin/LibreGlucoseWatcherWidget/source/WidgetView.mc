@@ -20,6 +20,7 @@
 import Toybox.Graphics;
 import Toybox.WatchUi;
 import Toybox.System;
+import Toybox.Lang;
 
 class WidgetView extends WatchUi.View {
 
@@ -42,10 +43,29 @@ class WidgetView extends WatchUi.View {
     function onUpdate(dc as Dc) as Void {
         // Call the parent onUpdate function to redraw the layout
         View.onUpdate(dc);
-
         System.println("Updating layout");
-        var sugar = Application.getApp().getProperty(SUGAR_DATA);
-        var text = "Glucose: " + sugar + " mg/dL";
+
+        var loginStatus = LibreGlucoseStorage.getLoginStatus();
+        switch (loginStatus) {
+            case LibreGlucoseStorage.LOGIN_MISSING_SETTINGS:
+                drawMessage(dc, "Missing login\nSet in app settings\nWait 5 min to retry");
+                break;
+
+            case LibreGlucoseStorage.LOGIN_IN_PROGRESS:
+                drawMessage(dc, "Login...");
+                break;
+
+            case LibreGlucoseStorage.LOGIN_INVALID:
+                drawMessage(dc, "Invalid email\nor password");
+                break;
+
+            case LibreGlucoseStorage.LOGIN_SUCCESS:
+                drawSugar(dc);
+                break;
+        }
+    }
+
+    function drawMessage(dc as Dc, text as String) as Void {
         dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
         dc.drawText(
             dc.getWidth() / 2,
@@ -55,10 +75,35 @@ class WidgetView extends WatchUi.View {
             (Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER));
     }
 
+    function drawSugar(dc as Dc) as Void {
+        var requestStatus = LibreGlucoseStorage.getRequestStatus();
+        switch (requestStatus) {
+            case LibreGlucoseStorage.REQUEST_INVALID_DATA:
+                drawMessage(dc, "Error:\nInvalid data");
+                break;
+            case LibreGlucoseStorage.REQUEST_INVALID_PATNUM:
+                drawMessage(dc, "Invalid patient\nnumber. Review\napp settings");
+                break;
+
+            case LibreGlucoseStorage.REQUEST_SUCCESS:
+                var sugar = LibreGlucoseStorage.getSugarValue();
+                var text = "Glucose:\n" + sugar;
+
+                var units = LibreGlucoseStorage.getSettingUnits();
+                if (units == LibreGlucoseStorage.SUGAR_UNIT_MGDL) {
+                    text += " mg/dL";
+                } else {
+                    text += " mmol/L";
+                }
+
+                drawMessage(dc, text);
+                break;
+        }
+    }
+
     // Called when this View is removed from the screen. Save the
     // state of this View here. This includes freeing resources from
     // memory.
     function onHide() as Void {
     }
-
 }

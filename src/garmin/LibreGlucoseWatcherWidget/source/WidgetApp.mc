@@ -36,13 +36,15 @@ class WidgetApp extends Application.AppBase {
         return [ new WidgetView() ] as Array<Views or InputDelegates>;
     }
 
-
     function getServiceDelegate() {
         return [ new LibreClientBackgroundService() ];
     }
 
+    function onSettingsChanged() {
+        WatchUi.requestUpdate();
+    }
+
     function onBackgroundData(data) {
-        Application.getApp().setProperty(SUGAR_DATA, data);
         WatchUi.requestUpdate();
     }
 }

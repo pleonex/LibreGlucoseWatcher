@@ -1,0 +1,22 @@
+<settings>
+
+    <setting propertyKey="@Properties.username" title="@Strings.UsernameTitle">
+        <settingConfig type="email" required="true" />
+    </setting>
+
+    <setting propertyKey="@Properties.password" title="@Strings.PasswordTitle">
+        <settingConfig type="password" required="true" />
+    </setting>
+
+    <setting propertyKey="@Properties.patNum" title="@Strings.PatientNumberTitle">
+        <settingConfig type="numeric" required="true" />
+    </setting>
+
+    <setting propertyKey="@Properties.units" title="@Strings.UnitsTitle">
+        <settingConfig type="list">
+            <listEntry value="0">@Strings.MgDl</listEntry>
+            <listEntry value="1">@Strings.MmolL</listEntry>
+        </settingConfig>
+    </setting>
+
+</settings>

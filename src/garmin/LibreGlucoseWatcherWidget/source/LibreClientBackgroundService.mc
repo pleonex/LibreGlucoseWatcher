@@ -17,16 +17,9 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-import Toybox.Application.Storage;
 import Toybox.System;
 import Toybox.Communications;
 import Toybox.Lang;
-
-(:background)
-var token as String or Null;
-
-(:background)
-var expirationTime;
 
 (:background)
 class LibreClientBackgroundService extends System.ServiceDelegate
@@ -36,42 +29,58 @@ class LibreClientBackgroundService extends System.ServiceDelegate
     private var libreLinkUpVersion = "4.1.1";
     private var libreLinkUpProduct = "llu.ios";
 
-    public var lastMeasurement as Number = 0;
-
     function initialize() {
         ServiceDelegate.initialize();
     }
 
     function onTemporalEvent() {
-        System.println("LibreClientBackgroundService running");
-
-        if ($.token == null) {
-            System.println("Retreiving token from store");
-            $.token = Storage.getValue("libretoken");
-        }
-
-        if ($.token == null) {
+        var token = LibreGlucoseStorage.getToken();
+        if (token == null || token.length() == 0) {
             loginAndQuery();
         } else {
-            query();
+            query(token);
         }
     }
 
     function onReceivedConnectionInfo(responseCode as Number, data as Dictionary or Null or String) as Void {
-        if (responseCode == 200) {
-            lastMeasurement = data["data"][0]["glucoseMeasurement"]["ValueInMgPerDl"];
-            System.println("Query successful. Last measurement: " + lastMeasurement);
-            Background.exit(lastMeasurement);
-        } else {
-            System.println("Failed to get sugar measurement: " + responseCode);
+        System.println("Query response: " + responseCode);
+        if (responseCode == 200 && data != null) {
+            var resultData = data["data"] as Array<Object> or Null;
+            if (resultData == null) {
+                LibreGlucoseStorage.setRequestStatus(LibreGlucoseStorage.REQUEST_INVALID_DATA);
+                Background.exit(null);
+                return;
+            }
 
-            $.token = null;
-            Storage.setValue("libretoken", $.token);
+            var patNum = LibreGlucoseStorage.getSettingPatNum();
+            if (resultData.size() <= patNum) {
+                LibreGlucoseStorage.setRequestStatus(LibreGlucoseStorage.REQUEST_INVALID_PATNUM);
+                Background.exit(null);
+                return;
+            }
+
+            var measurement = resultData[patNum]["glucoseMeasurement"];
+            if (measurement == null) {
+                LibreGlucoseStorage.setRequestStatus(LibreGlucoseStorage.REQUEST_INVALID_DATA);
+                Background.exit(null);
+                return;
+            }
+
+            var sugarMgDl = measurement["ValueInMgPerDl"];
+            var sugarMmolL = measurement["Value"];
+            LibreGlucoseStorage.setSugarValue(sugarMgDl, sugarMmolL);
+
+            LibreGlucoseStorage.setRequestStatus(LibreGlucoseStorage.REQUEST_SUCCESS);
+            Background.exit(null);
+        } else {
+            LibreGlucoseStorage.setRequestStatus(LibreGlucoseStorage.REQUEST_INVALID_DATA);
+            LibreGlucoseStorage.deleteToken();
+            loginAndQuery();
         }
     }
 
-    function query() as Void {
-        System.println("Requesting last measurement");
+    function query(token as String) as Void {
+        System.println("Querying...");
         var url = libreLinkUpUrl + "llu/connections";
         var options = {
             :method => Communications.HTTP_REQUEST_METHOD_GET,
@@ -79,7 +88,7 @@ class LibreClientBackgroundService extends System.ServiceDelegate
                 "Content-Type" => Communications.REQUEST_CONTENT_TYPE_JSON,
                 "version" => libreLinkUpVersion,
                 "product" => libreLinkUpProduct,
-                "Authorization" => "Bearer " + $.token
+                "Authorization" => "Bearer " + token
             },
             :responseType => Communications.HTTP_RESPONSE_CONTENT_TYPE_JSON
         };
@@ -88,19 +97,23 @@ class LibreClientBackgroundService extends System.ServiceDelegate
     }
 
     function onReceivedLogin(responseCode as Number, data as Dictionary or Null or String) as Void {
-        if (responseCode == 200) {
-            System.println("Login successful");
-            $.token = data["data"]["authTicket"]["token"];
-            Storage.setValue("libretoken", $.token);
+        System.println("Login response: " + responseCode);
+        if (responseCode == 200 and data["data"] != null and data["data"]["authTicket"] != null) {
+            var token = data["data"]["authTicket"]["token"];
+            LibreGlucoseStorage.setToken(token);
+            LibreGlucoseStorage.setLoginStatus(LibreGlucoseStorage.LOGIN_SUCCESS);
 
-            query();
+            query(token);
         } else {
-            System.println("Failed to login: " + responseCode);
+            LibreGlucoseStorage.setLoginStatus(LibreGlucoseStorage.LOGIN_INVALID);
+            Background.exit(null);
         }
     }
 
-    function loginAndQuery() as Void {
-        System.println("Requesting login");
+    public function loginAndQuery() as Void {
+        LibreGlucoseStorage.setLoginStatus(LibreGlucoseStorage.LOGIN_IN_PROGRESS);
+        System.println("Login...");
+
         var url = libreLinkUpUrl + "llu/auth/login";
         var options = {
             :method => Communications.HTTP_REQUEST_METHOD_POST,
@@ -112,11 +125,17 @@ class LibreClientBackgroundService extends System.ServiceDelegate
             :responseType => Communications.HTTP_RESPONSE_CONTENT_TYPE_JSON
         };
 
-        var params = {
-            "email" => "YOUR_EMAIL",
-            "password" => "YOUR_PASSWORD"
-        };
+        var username = LibreGlucoseStorage.getSettingUsername();
+        var pwd = LibreGlucoseStorage.getSettingPassword();
+        if (username == null or username.length() == 0 or pwd == null or pwd.length() == 0) {
+            LibreGlucoseStorage.setLoginStatus(LibreGlucoseStorage.LOGIN_MISSING_SETTINGS);
+            return;
+        }
 
+        var params = {
+            "email" => username,
+            "password" => pwd
+        };
         Communications.makeWebRequest(url, params, options, method(:onReceivedLogin));
     }
 }
