@@ -21,6 +21,7 @@ import Toybox.Graphics;
 import Toybox.WatchUi;
 import Toybox.System;
 import Toybox.Lang;
+import Toybox.Time.Gregorian;
 
 class WidgetView extends WatchUi.View {
 
@@ -99,6 +100,13 @@ class WidgetView extends WatchUi.View {
                 } else {
                     text += " mmol/L";
                 }
+
+                var time = LibreGlucoseStorage.getSugarTimestamp();
+                var infoTime = Gregorian.info(new Time.Moment(time), Time.FORMAT_SHORT);
+
+                var diff = new Time.Moment(Time.now().value() - time);
+                var infoDiff = Gregorian.info(diff, Time.FORMAT_SHORT);
+                text += "\n@" + infoTime.hour + ":" + infoTime.min + " (+" + infoDiff.min + " min)";
 
                 drawMessage(dc, text);
                 break;

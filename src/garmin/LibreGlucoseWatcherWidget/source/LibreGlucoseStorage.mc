@@ -1,6 +1,7 @@
 import Toybox.Application.Storage;
 import Toybox.Application.Properties;
 import Toybox.Lang;
+using Toybox.Time;
 
 (:background)
 module LibreGlucoseStorage
@@ -68,6 +69,9 @@ module LibreGlucoseStorage
     function setSugarValue(mgDl as String, mmolL as String) as Void {
         Storage.setValue(SUGAR_MGDL_LATEST_VALUE_PROPNAME, mgDl);
         Storage.setValue(SUGAR_MMOLL_LATEST_VALUE_PROPNAME, mmolL);
+
+        var now = Time.now().value();
+        Storage.setValue(SUGAR_LATEST_TIMESTAMP_PROPNAME, now);
     }
     function getSugarValue() as String {
         var units = getSettingUnits();
@@ -79,6 +83,9 @@ module LibreGlucoseStorage
         }
 
         return "Unknown unit";
+    }
+    function getSugarTimestamp() as Number {
+        return Storage.getValue(SUGAR_LATEST_TIMESTAMP_PROPNAME);
     }
 
     function getSettingUsername() as String {
