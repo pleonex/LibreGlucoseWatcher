@@ -22,6 +22,9 @@ import Toybox.Communications;
 import Toybox.Lang;
 
 (:background)
+var tries = 0;
+
+(:background)
 class LibreClientBackgroundService extends System.ServiceDelegate
 {
     private var libreLinkUpUrl = "https://api-eu.libreview.io/";
@@ -45,6 +48,8 @@ class LibreClientBackgroundService extends System.ServiceDelegate
     function onReceivedConnectionInfo(responseCode as Number, data as Dictionary or Null or String) as Void {
         System.println("Query response: " + responseCode);
         if (responseCode == 200 && data != null) {
+            $.tries = 0;
+
             var resultData = data["data"] as Array<Object> or Null;
             if (resultData == null) {
                 LibreGlucoseStorage.setRequestStatus(LibreGlucoseStorage.REQUEST_INVALID_DATA);
@@ -72,15 +77,21 @@ class LibreClientBackgroundService extends System.ServiceDelegate
 
             LibreGlucoseStorage.setRequestStatus(LibreGlucoseStorage.REQUEST_SUCCESS);
             Background.exit(null);
-        } else {
-            LibreGlucoseStorage.setRequestStatus(LibreGlucoseStorage.REQUEST_INVALID_DATA);
+        } else if (responseCode == 401) {
             LibreGlucoseStorage.deleteToken();
             loginAndQuery();
+        } else {
+            LibreGlucoseStorage.setRequestStatus(LibreGlucoseStorage.REQUEST_INVALID_DATA);
+            if ($.tries < 5) {
+                System.println("Retrying " + $.tries);
+                query(LibreGlucoseStorage.getToken());
+            }
         }
     }
 
     function query(token as String) as Void {
-        System.println("Querying...");
+        $.tries = $.tries + 1;
+        System.println("Querying... " + $.tries);
         LibreGlucoseStorage.setRequestStatus(LibreGlucoseStorage.REQUEST_IN_PROGRESS);
 
         var url = libreLinkUpUrl + "llu/connections";
@@ -113,6 +124,7 @@ class LibreClientBackgroundService extends System.ServiceDelegate
     }
 
     public function loginAndQuery() as Void {
+        $.tries = 0;
         LibreGlucoseStorage.setLoginStatus(LibreGlucoseStorage.LOGIN_IN_PROGRESS);
         System.println("Login...");
 
