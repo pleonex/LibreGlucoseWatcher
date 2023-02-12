@@ -24,8 +24,6 @@ import Toybox.Time;
 import Toybox.WatchUi;
 import Toybox.System;
 
-var SUGAR_DATA = "sugar_data";
-
 (:background)
 class LibreGlucoseViewApp extends Application.AppBase {
 
@@ -42,9 +40,11 @@ class LibreGlucoseViewApp extends Application.AppBase {
         return [ new LibreClientBackgroundService() ];
     }
 
+    function onSettingsChanged() {
+        WatchUi.requestUpdate();
+    }
+
     function onBackgroundData(data) {
-        System.println("Received data from BG service: " + data);
-        Application.getApp().setProperty(SUGAR_DATA, data);
         WatchUi.requestUpdate();
     }
 }

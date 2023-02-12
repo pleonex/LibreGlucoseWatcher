@@ -1,5 +1,5 @@
 ﻿using PleOps.LibreGlucose.Connection;
-using PleOps.LibreGlucose.Patiens;
+using PleOps.LibreGlucose.Patients;
 using System.Net.Http.Headers;
 
 namespace PleOps.LibreGlucose;

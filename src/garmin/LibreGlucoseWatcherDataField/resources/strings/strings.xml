@@ -1,3 +1,9 @@
 <strings>
     <string id="AppName">LibreGlucoseWatchViewDataField</string>
+    <string id="UsernameTitle">LibreView email</string>
+    <string id="PasswordTitle">LibreView password</string>
+    <string id="PatientNumberTitle">Patient number</string>
+    <string id="UnitsTitle">Blood sugar units</string>
+    <string id="MgDl">mg/dL</string>
+    <string id="MmolL">mmol/L</string>
 </strings>
