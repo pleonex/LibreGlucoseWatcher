@@ -7,8 +7,8 @@ namespace PleOps.LibreGlucose;
 public class LibreGlucoseClient
 {
     internal const string ApiUrl = "https://api-eu.libreview.io/";
-    internal const string ApiProduct = "llu.ios";
-    internal const string ApiVersion = "4.1.1";
+    internal const string ApiProduct = "llu.android";
+    internal const string ApiVersion = "5.0.0";
 
     private readonly HttpClient client;
 

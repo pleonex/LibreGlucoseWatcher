@@ -29,8 +29,8 @@ class LibreClientBackgroundService extends System.ServiceDelegate
 {
     private var libreLinkUpUrl = "https://api-eu.libreview.io/";
     private var userAgent = "LibreLinkUp";
-    private var libreLinkUpVersion = "4.1.1";
-    private var libreLinkUpProduct = "llu.ios";
+    private var libreLinkUpVersion = "5.0.0";
+    private var libreLinkUpProduct = "llu.android";
 
     function initialize() {
         ServiceDelegate.initialize();

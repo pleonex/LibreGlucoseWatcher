@@ -14,7 +14,6 @@ public class PatientsHandler
 
     public async Task<PatientsResult> Get()
     {
-        ;
         string uri = LibreGlucoseClient.ApiUrl + "llu/connections";
 
         var result = await client.GetFromJsonAsync<PatientsResult>(uri).ConfigureAwait(false);
