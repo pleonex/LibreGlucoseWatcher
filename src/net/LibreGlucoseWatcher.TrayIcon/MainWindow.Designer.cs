@@ -1,0 +1,352 @@
+﻿namespace PleOps.LibreGlucoseWatcher.TrayIcon
+{
+    partial class MainWindow
+    {
+        /// <summary>
+        ///  Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        ///  Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        ///  Required method for Designer support - do not modify
+        ///  the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            components = new System.ComponentModel.Container();
+            btnLogin = new Button();
+            groupLogin = new GroupBox();
+            labelToken = new Label();
+            labelTokenInfo = new Label();
+            labelPassword = new Label();
+            textBoxPassword = new TextBox();
+            textBoxEmail = new TextBox();
+            labelEmail = new Label();
+            labelGlucoseInfo = new Label();
+            labelGlucose = new Label();
+            groupBoxSettings = new GroupBox();
+            checkPlayMusic = new CheckBox();
+            boxPatientId = new NumericUpDown();
+            labelPatientId = new Label();
+            boxRefreshPeriod = new NumericUpDown();
+            labelRefresh = new Label();
+            radioButtonUnitMmolL = new RadioButton();
+            radioButtonUnitMgDl = new RadioButton();
+            labelUnits = new Label();
+            trayIcon = new NotifyIcon(components);
+            contextMenuTrayIcon = new ContextMenuStrip(components);
+            trayIconOpenSettings = new ToolStripMenuItem();
+            trayIconExit = new ToolStripMenuItem();
+            refreshGlucoseTimer = new System.Windows.Forms.Timer(components);
+            groupLogin.SuspendLayout();
+            groupBoxSettings.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)boxPatientId).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)boxRefreshPeriod).BeginInit();
+            contextMenuTrayIcon.SuspendLayout();
+            SuspendLayout();
+            // 
+            // btnLogin
+            // 
+            btnLogin.Enabled = false;
+            btnLogin.Location = new Point(6, 163);
+            btnLogin.Name = "btnLogin";
+            btnLogin.Size = new Size(112, 34);
+            btnLogin.TabIndex = 5;
+            btnLogin.Text = "Login!";
+            btnLogin.UseVisualStyleBackColor = true;
+            btnLogin.Click += LoginClicked;
+            // 
+            // groupLogin
+            // 
+            groupLogin.Controls.Add(labelToken);
+            groupLogin.Controls.Add(labelTokenInfo);
+            groupLogin.Controls.Add(labelPassword);
+            groupLogin.Controls.Add(textBoxPassword);
+            groupLogin.Controls.Add(btnLogin);
+            groupLogin.Controls.Add(textBoxEmail);
+            groupLogin.Controls.Add(labelEmail);
+            groupLogin.Location = new Point(12, 12);
+            groupLogin.Name = "groupLogin";
+            groupLogin.Size = new Size(398, 209);
+            groupLogin.TabIndex = 0;
+            groupLogin.TabStop = false;
+            groupLogin.Text = "Login details";
+            // 
+            // labelToken
+            // 
+            labelToken.AutoSize = true;
+            labelToken.Location = new Point(103, 115);
+            labelToken.Name = "labelToken";
+            labelToken.Size = new Size(248, 25);
+            labelToken.TabIndex = 6;
+            labelToken.Text = "Invalid - Re-enter login details";
+            // 
+            // labelTokenInfo
+            // 
+            labelTokenInfo.AutoSize = true;
+            labelTokenInfo.Location = new Point(6, 115);
+            labelTokenInfo.Name = "labelTokenInfo";
+            labelTokenInfo.Size = new Size(62, 25);
+            labelTokenInfo.TabIndex = 5;
+            labelTokenInfo.Text = "Token:";
+            // 
+            // labelPassword
+            // 
+            labelPassword.AutoSize = true;
+            labelPassword.Location = new Point(6, 70);
+            labelPassword.Name = "labelPassword";
+            labelPassword.Size = new Size(91, 25);
+            labelPassword.TabIndex = 3;
+            labelPassword.Text = "Password:";
+            // 
+            // textBoxPassword
+            // 
+            textBoxPassword.Location = new Point(103, 67);
+            textBoxPassword.Name = "textBoxPassword";
+            textBoxPassword.PlaceholderText = "LibreView password";
+            textBoxPassword.Size = new Size(271, 31);
+            textBoxPassword.TabIndex = 4;
+            textBoxPassword.UseSystemPasswordChar = true;
+            textBoxPassword.TextChanged += LoginTextChanged;
+            // 
+            // textBoxEmail
+            // 
+            textBoxEmail.Location = new Point(103, 30);
+            textBoxEmail.Name = "textBoxEmail";
+            textBoxEmail.PlaceholderText = "LibreView email";
+            textBoxEmail.Size = new Size(271, 31);
+            textBoxEmail.TabIndex = 2;
+            textBoxEmail.TextChanged += LoginTextChanged;
+            // 
+            // labelEmail
+            // 
+            labelEmail.AutoSize = true;
+            labelEmail.Location = new Point(6, 33);
+            labelEmail.Name = "labelEmail";
+            labelEmail.Size = new Size(58, 25);
+            labelEmail.TabIndex = 1;
+            labelEmail.Text = "Email:";
+            // 
+            // labelGlucoseInfo
+            // 
+            labelGlucoseInfo.AutoSize = true;
+            labelGlucoseInfo.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point);
+            labelGlucoseInfo.Location = new Point(18, 224);
+            labelGlucoseInfo.Name = "labelGlucoseInfo";
+            labelGlucoseInfo.Size = new Size(111, 32);
+            labelGlucoseInfo.TabIndex = 6;
+            labelGlucoseInfo.Text = "Glucose:";
+            // 
+            // labelGlucose
+            // 
+            labelGlucose.AutoSize = true;
+            labelGlucose.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point);
+            labelGlucose.Location = new Point(135, 224);
+            labelGlucose.Name = "labelGlucose";
+            labelGlucose.Size = new Size(206, 32);
+            labelGlucose.TabIndex = 7;
+            labelGlucose.Text = "waiting for login";
+            // 
+            // groupBoxSettings
+            // 
+            groupBoxSettings.Controls.Add(checkPlayMusic);
+            groupBoxSettings.Controls.Add(boxPatientId);
+            groupBoxSettings.Controls.Add(labelPatientId);
+            groupBoxSettings.Controls.Add(boxRefreshPeriod);
+            groupBoxSettings.Controls.Add(labelRefresh);
+            groupBoxSettings.Controls.Add(radioButtonUnitMmolL);
+            groupBoxSettings.Controls.Add(radioButtonUnitMgDl);
+            groupBoxSettings.Controls.Add(labelUnits);
+            groupBoxSettings.Location = new Point(416, 12);
+            groupBoxSettings.Name = "groupBoxSettings";
+            groupBoxSettings.Size = new Size(356, 209);
+            groupBoxSettings.TabIndex = 8;
+            groupBoxSettings.TabStop = false;
+            groupBoxSettings.Text = "Settings";
+            // 
+            // checkPlayMusic
+            // 
+            checkPlayMusic.AutoSize = true;
+            checkPlayMusic.Checked = true;
+            checkPlayMusic.CheckState = CheckState.Checked;
+            checkPlayMusic.Location = new Point(6, 153);
+            checkPlayMusic.Name = "checkPlayMusic";
+            checkPlayMusic.Size = new Size(123, 29);
+            checkPlayMusic.TabIndex = 7;
+            checkPlayMusic.Text = "Play song?";
+            checkPlayMusic.UseVisualStyleBackColor = true;
+            // 
+            // boxPatientId
+            // 
+            boxPatientId.Location = new Point(188, 107);
+            boxPatientId.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
+            boxPatientId.Name = "boxPatientId";
+            boxPatientId.Size = new Size(156, 31);
+            boxPatientId.TabIndex = 6;
+            boxPatientId.ValueChanged += SettingChanged;
+            // 
+            // labelPatientId
+            // 
+            labelPatientId.AutoSize = true;
+            labelPatientId.Location = new Point(6, 109);
+            labelPatientId.Name = "labelPatientId";
+            labelPatientId.Size = new Size(92, 25);
+            labelPatientId.TabIndex = 5;
+            labelPatientId.Text = "Patient ID:";
+            // 
+            // boxRefreshPeriod
+            // 
+            boxRefreshPeriod.Location = new Point(188, 70);
+            boxRefreshPeriod.Maximum = new decimal(new int[] { 60, 0, 0, 0 });
+            boxRefreshPeriod.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            boxRefreshPeriod.Name = "boxRefreshPeriod";
+            boxRefreshPeriod.Size = new Size(156, 31);
+            boxRefreshPeriod.TabIndex = 4;
+            boxRefreshPeriod.Value = new decimal(new int[] { 5, 0, 0, 0 });
+            boxRefreshPeriod.ValueChanged += BoxRefreshPeriodValueChanged;
+            // 
+            // labelRefresh
+            // 
+            labelRefresh.AutoSize = true;
+            labelRefresh.Location = new Point(6, 70);
+            labelRefresh.Name = "labelRefresh";
+            labelRefresh.Size = new Size(176, 25);
+            labelRefresh.TabIndex = 3;
+            labelRefresh.Text = "Refresh period (min):";
+            // 
+            // radioButtonUnitMmolL
+            // 
+            radioButtonUnitMmolL.AutoSize = true;
+            radioButtonUnitMmolL.Location = new Point(245, 33);
+            radioButtonUnitMmolL.Name = "radioButtonUnitMmolL";
+            radioButtonUnitMmolL.Size = new Size(99, 29);
+            radioButtonUnitMmolL.TabIndex = 2;
+            radioButtonUnitMmolL.Text = "mmol/L";
+            radioButtonUnitMmolL.UseVisualStyleBackColor = true;
+            radioButtonUnitMmolL.CheckedChanged += SettingChanged;
+            // 
+            // radioButtonUnitMgDl
+            // 
+            radioButtonUnitMgDl.AutoSize = true;
+            radioButtonUnitMgDl.Checked = true;
+            radioButtonUnitMgDl.Location = new Point(133, 33);
+            radioButtonUnitMgDl.Name = "radioButtonUnitMgDl";
+            radioButtonUnitMgDl.Size = new Size(90, 29);
+            radioButtonUnitMgDl.TabIndex = 1;
+            radioButtonUnitMgDl.TabStop = true;
+            radioButtonUnitMgDl.Text = "mg/dL";
+            radioButtonUnitMgDl.UseVisualStyleBackColor = true;
+            radioButtonUnitMgDl.CheckedChanged += SettingChanged;
+            // 
+            // labelUnits
+            // 
+            labelUnits.AutoSize = true;
+            labelUnits.Location = new Point(6, 33);
+            labelUnits.Name = "labelUnits";
+            labelUnits.Size = new Size(121, 25);
+            labelUnits.TabIndex = 0;
+            labelUnits.Text = "Glucose units:";
+            // 
+            // trayIcon
+            // 
+            trayIcon.ContextMenuStrip = contextMenuTrayIcon;
+            trayIcon.Text = "Waiting for login";
+            trayIcon.Visible = true;
+            trayIcon.MouseDoubleClick += TrayIconMouseDoubleClick;
+            // 
+            // contextMenuTrayIcon
+            // 
+            contextMenuTrayIcon.ImageScalingSize = new Size(24, 24);
+            contextMenuTrayIcon.Items.AddRange(new ToolStripItem[] { trayIconOpenSettings, trayIconExit });
+            contextMenuTrayIcon.Name = "contextMenuTrayIcon";
+            contextMenuTrayIcon.Size = new Size(149, 68);
+            // 
+            // trayIconOpenSettings
+            // 
+            trayIconOpenSettings.Name = "trayIconOpenSettings";
+            trayIconOpenSettings.Size = new Size(148, 32);
+            trayIconOpenSettings.Text = "Settings";
+            trayIconOpenSettings.Click += TrayIconOpenSettingClicked;
+            // 
+            // trayIconExit
+            // 
+            trayIconExit.Name = "trayIconExit";
+            trayIconExit.Size = new Size(148, 32);
+            trayIconExit.Text = "Exit";
+            trayIconExit.Click += TrayIconExitClicked;
+            // 
+            // refreshGlucoseTimer
+            // 
+            refreshGlucoseTimer.Tick += RefreshGlucoseTimerTick;
+            // 
+            // MainWindow
+            // 
+            AutoScaleDimensions = new SizeF(10F, 25F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(862, 282);
+            Controls.Add(groupBoxSettings);
+            Controls.Add(labelGlucose);
+            Controls.Add(labelGlucoseInfo);
+            Controls.Add(groupLogin);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            MaximizeBox = false;
+            Name = "MainWindow";
+            Text = "LibreGlucoseWatcher ~~ by pleonex";
+            FormClosing += MainWindow_FormClosing;
+            Load += MainWindowLoad;
+            MouseMove += MainWindow_MouseMove;
+            Resize += MainWindowResizing;
+            groupLogin.ResumeLayout(false);
+            groupLogin.PerformLayout();
+            groupBoxSettings.ResumeLayout(false);
+            groupBoxSettings.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)boxPatientId).EndInit();
+            ((System.ComponentModel.ISupportInitialize)boxRefreshPeriod).EndInit();
+            contextMenuTrayIcon.ResumeLayout(false);
+            ResumeLayout(false);
+            PerformLayout();
+        }
+
+        #endregion
+
+        private Button btnLogin;
+        private GroupBox groupLogin;
+        private Label labelPassword;
+        private TextBox textBoxPassword;
+        private TextBox textBoxEmail;
+        private Label labelEmail;
+        private Label labelGlucoseInfo;
+        private Label labelGlucose;
+        private Label labelToken;
+        private Label labelTokenInfo;
+        private GroupBox groupBoxSettings;
+        private RadioButton radioButtonUnitMmolL;
+        private RadioButton radioButtonUnitMgDl;
+        private Label labelUnits;
+        private NumericUpDown boxRefreshPeriod;
+        private Label labelRefresh;
+        private NumericUpDown boxPatientId;
+        private Label labelPatientId;
+        private NotifyIcon trayIcon;
+        private ContextMenuStrip contextMenuTrayIcon;
+        private ToolStripMenuItem trayIconOpenSettings;
+        private ToolStripMenuItem trayIconExit;
+        private System.Windows.Forms.Timer refreshGlucoseTimer;
+        private CheckBox checkPlayMusic;
+    }
+}

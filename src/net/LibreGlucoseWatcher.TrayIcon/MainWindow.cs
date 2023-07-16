@@ -1,0 +1,240 @@
+﻿using PleOps.LibreGlucose;
+using PleOps.LibreGlucose.Connection;
+using PleOps.LibreGlucose.Patients;
+using System.Media;
+using System.Resources;
+
+namespace PleOps.LibreGlucoseWatcher.TrayIcon;
+
+public partial class MainWindow : Form
+{
+    private readonly LibreGlucoseClient client;
+    private readonly SoundPlayer soundPlayer;
+    private Datum[]? lastMeasurement;
+    private bool wantToClose = false;
+
+    public MainWindow()
+    {
+        client = new LibreGlucoseClient();
+        soundPlayer = new SoundPlayer();
+
+        InitializeComponent();
+        refreshGlucoseTimer.Interval = (int)boxRefreshPeriod.Value * 60 * 1000;
+
+        ReadLoginToken();
+    }
+
+    private void ReadLoginToken()
+    {
+        bool logged = false;
+        if (File.Exists(AuthFileEncryption.AuthPath))
+        {
+            var authData = AuthFileEncryption.ReadToken();
+            if (authData is null)
+            {
+                labelToken.Text = "Invalid token file - Re-enter login details";
+                UpdateTrayIcon("?", "", 2, "Login first");
+                File.Delete(AuthFileEncryption.AuthPath);
+            } else
+            {
+                client.Login.AuthenticationData = authData;
+                logged = true;
+                labelToken.Text = "Valid token - No need details";
+            }
+        } else
+        {
+            labelToken.Text = "Missing token - Enter login details.";
+            UpdateTrayIcon("?", "", 2, "Login first");
+        }
+
+        if (logged)
+        {
+            refreshGlucoseTimer.Start();
+        }
+    }
+
+    private void LoginTextChanged(object sender, EventArgs e)
+    {
+        btnLogin.Enabled = (textBoxEmail.Text.Length > 0) &&
+            (textBoxPassword.Text.Length > 0);
+    }
+
+    private async void LoginClicked(object sender, EventArgs e)
+    {
+        try
+        {
+            var parameters = new LoginParameters(textBoxEmail.Text, textBoxPassword.Text);
+            await client.Login.LoginAsync(parameters).ConfigureAwait(true);
+
+            var authData = client.Login.AuthenticationData;
+            AuthFileEncryption.WriteToken(authData);
+            labelToken.Text = "New token created";
+
+            await FetchGlucose().ConfigureAwait(true);
+            DisplayGlucose();
+            refreshGlucoseTimer.Start();
+        } catch (Exception ex)
+        {
+            labelGlucose.Text = ex.Message;
+        }
+    }
+
+    private async Task FetchGlucose()
+    {
+        var patients = await client.Patients.Get().ConfigureAwait(false);
+        lastMeasurement = patients.Data;
+    }
+
+    private void DisplayGlucose()
+    {
+        if (lastMeasurement is null)
+        {
+            return;
+        }
+
+        if (boxPatientId.Value >= lastMeasurement.Length)
+        {
+            labelGlucose.Text = $"Invalid patient ID. Maximum: {lastMeasurement.Length - 1}";
+            UpdateTrayIcon("?", "", 2, "Invalid settings");
+            return;
+        }
+
+        var measurement = lastMeasurement[(int)boxPatientId.Value].GlucoseMeasurement;
+        (var glucose, string units) = radioButtonUnitMgDl.Checked
+            ? (measurement.ValueInMgPerDl, "mg/dL")
+            : (measurement.Value, "mmol/L");
+        string arrowText = measurement.TrendArrow switch
+        {
+            1 => "↓↓",
+            2 => "↓",
+            3 => "→",
+            4 => "↑",
+            5 => "↑↑",
+            _ => "?",
+        };
+        labelGlucose.Text = $"{glucose} {units} {arrowText} @ {measurement.Timestamp}";
+
+        UpdateTrayIcon($"{glucose} {arrowText}", units, measurement.MeasurementColor, measurement.Timestamp);
+
+        if (checkPlayMusic.Checked && (measurement.IsHigh || measurement.IsLow))
+        {
+            //soundPlayer.Play();
+            BeepMusic.PlayPokemon();
+        }
+    }
+
+    private void SettingChanged(object sender, EventArgs e)
+    {
+        DisplayGlucose();
+    }
+
+    private void UpdateTrayIcon(string glucose, string units, int colorId, string timestamp)
+    {
+        var font = new Font(FontFamily.GenericSerif, 20);
+        string text = glucose.Replace(" ", "\n");
+
+        using var dummyImage = new Bitmap(256, 256);
+        using var measurementGraphic = Graphics.FromImage(dummyImage);
+        SizeF textSize = measurementGraphic.MeasureString(text, font);
+
+        var image = new Bitmap((int)textSize.Width, (int)textSize.Height);
+        var graphic = Graphics.FromImage(image);
+
+        Brush color = colorId switch
+        {
+            1 => Brushes.Green,
+            2 => Brushes.Orange,
+            3 => Brushes.Red,
+            _ => Brushes.White,
+        };
+        graphic.FillRectangle(color, 0, 0, image.Width, image.Height);
+        graphic.DrawString(text, font, Brushes.Black, 0, 0);
+
+        var icon = Icon.FromHandle(image.GetHicon());
+        trayIcon.Icon = icon;
+        trayIcon.Text = $"{glucose} {units} @ {timestamp}";
+
+        Icon = icon;
+    }
+
+    private void TrayIconExitClicked(object sender, EventArgs e)
+    {
+        wantToClose = true;
+        Close();
+    }
+
+    private void TrayIconOpenSettingClicked(object sender, EventArgs e)
+    {
+        Show();
+        ShowInTaskbar = true;
+        soundPlayer.Stop();
+    }
+
+    private void MainWindowResizing(object sender, EventArgs e)
+    {
+        if (WindowState is FormWindowState.Normal)
+        {
+            soundPlayer.Stop();
+        }
+    }
+
+    private void TrayIconMouseDoubleClick(object sender, MouseEventArgs e)
+    {
+        Show();
+        ShowInTaskbar = true;
+        soundPlayer.Stop();
+    }
+
+    private async void RefreshGlucoseTimerTick(object sender, EventArgs e)
+    {
+        if (string.IsNullOrEmpty(client.Login.Token))
+        {
+            return;
+        }
+
+        try
+        {
+            await FetchGlucose().ConfigureAwait(false);
+            this.Invoke(() => DisplayGlucose());
+        } catch (Exception ex)
+        {
+            labelGlucose.Invoke(() => labelGlucose.Text = ex.Message);
+        }
+    }
+
+    private void BoxRefreshPeriodValueChanged(object sender, EventArgs e)
+    {
+        refreshGlucoseTimer.Interval = (int)boxRefreshPeriod.Value * 60 * 1000;
+    }
+
+    private async void MainWindowLoad(object sender, EventArgs e)
+    {
+        try
+        {
+            //string songId = "PleOps.LibreGlucoseWatcher.TrayIcon.Songs.Bach - Air - 30sec.wav";
+            //soundPlayer.Stream = typeof(MainWindow).Assembly.GetManifestResourceStream(songId);
+            //soundPlayer.Load();
+
+            await FetchGlucose().ConfigureAwait(true);
+            DisplayGlucose();
+        } catch (Exception ex)
+        {
+            labelGlucose.Text = ex.Message;
+        }
+    }
+
+    private void MainWindow_MouseMove(object sender, MouseEventArgs e)
+    {
+        soundPlayer.Stop();
+    }
+
+    private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
+    {
+        if (!wantToClose)
+        {
+            e.Cancel = true;
+            ShowInTaskbar = false;
+            Hide();
+        }
+    }
+}

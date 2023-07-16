@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>LibreGlucoseWatcher</AssemblyName>
+    <Description>Watch your glucose levels from LibreLinkUp-compatible apps.</Description>
+    <OutputType>WinExe</OutputType>
+
+    <TargetFramework>net7.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+
+    <RootNamespace>PleOps.LibreGlucoseWatcher.TrayIcon</RootNamespace>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Songs\Bach - Air - 30sec.wav" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LibreGlucose\LibreGlucose.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Songs\Bach - Air - 30sec.wav" />
+  </ItemGroup>
+
+</Project>
