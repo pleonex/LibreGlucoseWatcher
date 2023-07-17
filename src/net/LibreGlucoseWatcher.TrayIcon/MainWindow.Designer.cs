@@ -60,6 +60,7 @@
             trayIconOpenSettings = new ToolStripMenuItem();
             trayIconExit = new ToolStripMenuItem();
             refreshGlucoseTimer = new System.Windows.Forms.Timer(components);
+            btnCheck = new Button();
             groupLogin.SuspendLayout();
             groupBoxSettings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)boxHighThreshold).BeginInit();
@@ -375,11 +376,23 @@
             // 
             refreshGlucoseTimer.Tick += RefreshGlucoseTimerTick;
             // 
+            // btnCheck
+            // 
+            btnCheck.Enabled = false;
+            btnCheck.Location = new Point(660, 358);
+            btnCheck.Name = "btnCheck";
+            btnCheck.Size = new Size(112, 34);
+            btnCheck.TabIndex = 9;
+            btnCheck.Text = "Check now!";
+            btnCheck.UseVisualStyleBackColor = true;
+            btnCheck.Click += BtnCheckClick;
+            // 
             // MainWindow
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(789, 404);
+            Controls.Add(btnCheck);
             Controls.Add(groupBoxSettings);
             Controls.Add(labelGlucose);
             Controls.Add(labelGlucoseInfo);
@@ -438,5 +451,6 @@
         private Label labelHighThresholdLlu;
         private Label labelLowThresholdLlu;
         private CheckBox checkShowNotification;
+        private Button btnCheck;
     }
 }

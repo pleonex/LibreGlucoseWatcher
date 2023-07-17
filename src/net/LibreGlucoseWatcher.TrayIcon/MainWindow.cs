@@ -51,6 +51,7 @@ public partial class MainWindow : Form
 
         if (logged)
         {
+            btnCheck.Enabled = true;
             refreshGlucoseTimer.Start();
         }
     }
@@ -74,7 +75,9 @@ public partial class MainWindow : Form
 
             await FetchGlucose().ConfigureAwait(true);
             DisplayGlucose();
+
             refreshGlucoseTimer.Start();
+            btnCheck.Enabled = true;
         } catch (Exception ex)
         {
             labelGlucose.Text = ex.Message;
@@ -305,6 +308,23 @@ public partial class MainWindow : Form
             e.Cancel = true;
             ShowInTaskbar = false;
             Hide();
+        }
+    }
+
+    private async void BtnCheckClick(object sender, EventArgs e)
+    {
+        try
+        {
+
+            if (!string.IsNullOrEmpty(client.Login.Token))
+            {
+                await FetchGlucose().ConfigureAwait(true);
+                DisplayGlucose();
+            }
+        }
+        catch (Exception ex)
+        {
+            labelGlucose.Text = ex.Message;
         }
     }
 }
