@@ -40,6 +40,13 @@
             labelGlucoseInfo = new Label();
             labelGlucose = new Label();
             groupBoxSettings = new GroupBox();
+            checkShowNotification = new CheckBox();
+            labelHighThresholdLlu = new Label();
+            labelLowThresholdLlu = new Label();
+            boxHighThreshold = new NumericUpDown();
+            boxLowThreshold = new NumericUpDown();
+            labelHighThr = new Label();
+            labelLowThrText = new Label();
             checkPlayMusic = new CheckBox();
             boxPatientId = new NumericUpDown();
             labelPatientId = new Label();
@@ -55,6 +62,8 @@
             refreshGlucoseTimer = new System.Windows.Forms.Timer(components);
             groupLogin.SuspendLayout();
             groupBoxSettings.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)boxHighThreshold).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)boxLowThreshold).BeginInit();
             ((System.ComponentModel.ISupportInitialize)boxPatientId).BeginInit();
             ((System.ComponentModel.ISupportInitialize)boxRefreshPeriod).BeginInit();
             contextMenuTrayIcon.SuspendLayout();
@@ -146,7 +155,7 @@
             // 
             labelGlucoseInfo.AutoSize = true;
             labelGlucoseInfo.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point);
-            labelGlucoseInfo.Location = new Point(18, 224);
+            labelGlucoseInfo.Location = new Point(18, 350);
             labelGlucoseInfo.Name = "labelGlucoseInfo";
             labelGlucoseInfo.Size = new Size(111, 32);
             labelGlucoseInfo.TabIndex = 6;
@@ -156,7 +165,7 @@
             // 
             labelGlucose.AutoSize = true;
             labelGlucose.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point);
-            labelGlucose.Location = new Point(135, 224);
+            labelGlucose.Location = new Point(135, 350);
             labelGlucose.Name = "labelGlucose";
             labelGlucose.Size = new Size(206, 32);
             labelGlucose.TabIndex = 7;
@@ -164,6 +173,13 @@
             // 
             // groupBoxSettings
             // 
+            groupBoxSettings.Controls.Add(checkShowNotification);
+            groupBoxSettings.Controls.Add(labelHighThresholdLlu);
+            groupBoxSettings.Controls.Add(labelLowThresholdLlu);
+            groupBoxSettings.Controls.Add(boxHighThreshold);
+            groupBoxSettings.Controls.Add(boxLowThreshold);
+            groupBoxSettings.Controls.Add(labelHighThr);
+            groupBoxSettings.Controls.Add(labelLowThrText);
             groupBoxSettings.Controls.Add(checkPlayMusic);
             groupBoxSettings.Controls.Add(boxPatientId);
             groupBoxSettings.Controls.Add(labelPatientId);
@@ -174,16 +190,82 @@
             groupBoxSettings.Controls.Add(labelUnits);
             groupBoxSettings.Location = new Point(416, 12);
             groupBoxSettings.Name = "groupBoxSettings";
-            groupBoxSettings.Size = new Size(356, 209);
+            groupBoxSettings.Size = new Size(356, 318);
             groupBoxSettings.TabIndex = 8;
             groupBoxSettings.TabStop = false;
             groupBoxSettings.Text = "Settings";
             // 
+            // checkShowNotification
+            // 
+            checkShowNotification.AutoSize = true;
+            checkShowNotification.Checked = true;
+            checkShowNotification.CheckState = CheckState.Checked;
+            checkShowNotification.Location = new Point(158, 153);
+            checkShowNotification.Name = "checkShowNotification";
+            checkShowNotification.Size = new Size(184, 29);
+            checkShowNotification.TabIndex = 14;
+            checkShowNotification.Text = "Show notification?";
+            checkShowNotification.UseVisualStyleBackColor = true;
+            // 
+            // labelHighThresholdLlu
+            // 
+            labelHighThresholdLlu.AutoSize = true;
+            labelHighThresholdLlu.Location = new Point(298, 228);
+            labelHighThresholdLlu.Name = "labelHighThresholdLlu";
+            labelHighThresholdLlu.Size = new Size(44, 25);
+            labelHighThresholdLlu.TabIndex = 13;
+            labelHighThresholdLlu.Text = "TBD";
+            // 
+            // labelLowThresholdLlu
+            // 
+            labelLowThresholdLlu.AutoSize = true;
+            labelLowThresholdLlu.Location = new Point(298, 193);
+            labelLowThresholdLlu.Name = "labelLowThresholdLlu";
+            labelLowThresholdLlu.Size = new Size(44, 25);
+            labelLowThresholdLlu.TabIndex = 12;
+            labelLowThresholdLlu.Text = "TBD";
+            // 
+            // boxHighThreshold
+            // 
+            boxHighThreshold.Location = new Point(188, 228);
+            boxHighThreshold.Maximum = new decimal(new int[] { 612, 0, 0, 0 });
+            boxHighThreshold.Minimum = new decimal(new int[] { 126, 0, 0, 0 });
+            boxHighThreshold.Name = "boxHighThreshold";
+            boxHighThreshold.Size = new Size(104, 31);
+            boxHighThreshold.TabIndex = 11;
+            boxHighThreshold.Value = new decimal(new int[] { 180, 0, 0, 0 });
+            // 
+            // boxLowThreshold
+            // 
+            boxLowThreshold.Location = new Point(188, 191);
+            boxLowThreshold.Maximum = new decimal(new int[] { 126, 0, 0, 0 });
+            boxLowThreshold.Minimum = new decimal(new int[] { 54, 0, 0, 0 });
+            boxLowThreshold.Name = "boxLowThreshold";
+            boxLowThreshold.Size = new Size(104, 31);
+            boxLowThreshold.TabIndex = 10;
+            boxLowThreshold.Value = new decimal(new int[] { 90, 0, 0, 0 });
+            // 
+            // labelHighThr
+            // 
+            labelHighThr.AutoSize = true;
+            labelHighThr.Location = new Point(6, 230);
+            labelHighThr.Name = "labelHighThr";
+            labelHighThr.Size = new Size(134, 25);
+            labelHighThr.TabIndex = 9;
+            labelHighThr.Text = "High threshold:";
+            // 
+            // labelLowThrText
+            // 
+            labelLowThrText.AutoSize = true;
+            labelLowThrText.Location = new Point(6, 193);
+            labelLowThrText.Name = "labelLowThrText";
+            labelLowThrText.Size = new Size(128, 25);
+            labelLowThrText.TabIndex = 8;
+            labelLowThrText.Text = "Low threshold:";
+            // 
             // checkPlayMusic
             // 
             checkPlayMusic.AutoSize = true;
-            checkPlayMusic.Checked = true;
-            checkPlayMusic.CheckState = CheckState.Checked;
             checkPlayMusic.Location = new Point(6, 153);
             checkPlayMusic.Name = "checkPlayMusic";
             checkPlayMusic.Size = new Size(123, 29);
@@ -238,7 +320,6 @@
             radioButtonUnitMmolL.TabIndex = 2;
             radioButtonUnitMmolL.Text = "mmol/L";
             radioButtonUnitMmolL.UseVisualStyleBackColor = true;
-            radioButtonUnitMmolL.CheckedChanged += SettingChanged;
             // 
             // radioButtonUnitMgDl
             // 
@@ -298,7 +379,7 @@
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(862, 282);
+            ClientSize = new Size(789, 404);
             Controls.Add(groupBoxSettings);
             Controls.Add(labelGlucose);
             Controls.Add(labelGlucoseInfo);
@@ -315,6 +396,8 @@
             groupLogin.PerformLayout();
             groupBoxSettings.ResumeLayout(false);
             groupBoxSettings.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)boxHighThreshold).EndInit();
+            ((System.ComponentModel.ISupportInitialize)boxLowThreshold).EndInit();
             ((System.ComponentModel.ISupportInitialize)boxPatientId).EndInit();
             ((System.ComponentModel.ISupportInitialize)boxRefreshPeriod).EndInit();
             contextMenuTrayIcon.ResumeLayout(false);
@@ -348,5 +431,12 @@
         private ToolStripMenuItem trayIconExit;
         private System.Windows.Forms.Timer refreshGlucoseTimer;
         private CheckBox checkPlayMusic;
+        private NumericUpDown boxHighThreshold;
+        private NumericUpDown boxLowThreshold;
+        private Label labelHighThr;
+        private Label labelLowThrText;
+        private Label labelHighThresholdLlu;
+        private Label labelLowThresholdLlu;
+        private CheckBox checkShowNotification;
     }
 }

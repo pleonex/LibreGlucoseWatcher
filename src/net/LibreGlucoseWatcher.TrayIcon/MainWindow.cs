@@ -1,6 +1,8 @@
-﻿using PleOps.LibreGlucose;
+﻿using Microsoft.Toolkit.Uwp.Notifications;
+using PleOps.LibreGlucose;
 using PleOps.LibreGlucose.Connection;
 using PleOps.LibreGlucose.Patients;
+using System.Globalization;
 using System.Media;
 using System.Resources;
 
@@ -99,7 +101,8 @@ public partial class MainWindow : Form
             return;
         }
 
-        var measurement = lastMeasurement[(int)boxPatientId.Value].GlucoseMeasurement;
+        var patientData = lastMeasurement[(int)boxPatientId.Value];
+        var measurement = patientData.GlucoseMeasurement;
         (var glucose, string units) = radioButtonUnitMgDl.Checked
             ? (measurement.ValueInMgPerDl, "mg/dL")
             : (measurement.Value, "mmol/L");
@@ -112,19 +115,83 @@ public partial class MainWindow : Form
             5 => "↑↑",
             _ => "?",
         };
-        labelGlucose.Text = $"{glucose} {units} {arrowText} @ {measurement.Timestamp}";
+        DateTime timestamp = DateTime.ParseExact(
+            measurement.Timestamp,
+            "M/d/yyyy h:m:s tt",
+            CultureInfo.InvariantCulture);
+        var sourceTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
+        timestamp = TimeZoneInfo.ConvertTimeToUtc(timestamp, sourceTimeZone);
+        var diff = DateTime.UtcNow - timestamp;
+
+        labelGlucose.Text = $"{glucose} {units} {arrowText} @ {(int)diff.TotalMinutes} minutes ago";
 
         UpdateTrayIcon($"{glucose} {arrowText}", units, measurement.MeasurementColor, measurement.Timestamp);
 
-        if (checkPlayMusic.Checked && (measurement.IsHigh || measurement.IsLow))
+        if (radioButtonUnitMgDl.Checked)
         {
-            //soundPlayer.Play();
-            BeepMusic.PlayPokemon();
+            labelHighThresholdLlu.Text = patientData.TargetHigh.ToString();
+            labelLowThresholdLlu.Text = patientData.TargetLow.ToString();
+        } else
+        {
+            labelHighThresholdLlu.Text = (patientData.TargetHigh / 18.0).ToString("F1");
+            labelLowThresholdLlu.Text = (patientData.TargetLow / 18.0).ToString("F1");
+        }
+
+        bool isHigh = glucose >= (float)boxHighThreshold.Value;
+        bool isLow = glucose <= (float)boxLowThreshold.Value;
+        if (isHigh || isLow)
+        {
+            if (checkShowNotification.Checked)
+            {
+                new ToastContentBuilder()
+                    .AddText("Glucose over threshold!")
+                    .AddText($"{glucose} {units} {arrowText}")
+                    .AddText(measurement.Timestamp)
+                    .AddCustomTimeStamp(timestamp)
+                    .Show(toast =>
+                    {
+                        toast.Tag = "23946";
+                    });
+            }
+
+            if (checkPlayMusic.Checked)
+            {
+                soundPlayer.Play();
+            }
         }
     }
 
     private void SettingChanged(object sender, EventArgs e)
     {
+        if (sender == radioButtonUnitMgDl || sender == radioButtonUnitMmolL)
+        {
+            decimal oldHighValue = boxHighThreshold.Value;
+            decimal oldLowValue = boxLowThreshold.Value;
+            if (radioButtonUnitMgDl.Checked)
+            {
+                boxHighThreshold.DecimalPlaces = 0;
+                boxHighThreshold.Maximum *= 18.0m;
+                boxHighThreshold.Minimum *= 18.0m;
+                boxHighThreshold.Value = oldHighValue * 18.0m;
+
+                boxLowThreshold.DecimalPlaces = 0;
+                boxLowThreshold.Minimum *= 18.0m;
+                boxLowThreshold.Maximum *= 18.0m;
+                boxLowThreshold.Value = oldLowValue * 18.0m;
+            } else
+            {
+                boxHighThreshold.DecimalPlaces = 1;
+                boxHighThreshold.Minimum /= 18.0m;
+                boxHighThreshold.Maximum /= 18.0m;
+                boxHighThreshold.Value = oldHighValue / 18.0m;
+
+                boxLowThreshold.DecimalPlaces = 1;
+                boxLowThreshold.Minimum /= 18.0m;
+                boxLowThreshold.Maximum /= 18.0m;
+                boxLowThreshold.Value = oldLowValue / 18.0m;
+            }
+        }
+
         DisplayGlucose();
     }
 
@@ -211,12 +278,15 @@ public partial class MainWindow : Form
     {
         try
         {
-            //string songId = "PleOps.LibreGlucoseWatcher.TrayIcon.Songs.Bach - Air - 30sec.wav";
-            //soundPlayer.Stream = typeof(MainWindow).Assembly.GetManifestResourceStream(songId);
-            //soundPlayer.Load();
+            string songId = "PleOps.LibreGlucoseWatcher.TrayIcon.Songs.Bach - Air - 30sec.wav";
+            soundPlayer.Stream = typeof(MainWindow).Assembly.GetManifestResourceStream(songId);
+            soundPlayer.Load();
 
-            await FetchGlucose().ConfigureAwait(true);
-            DisplayGlucose();
+            if (!string.IsNullOrEmpty(client.Login.Token))
+            {
+                await FetchGlucose().ConfigureAwait(true);
+                DisplayGlucose();
+            }
         } catch (Exception ex)
         {
             labelGlucose.Text = ex.Message;
