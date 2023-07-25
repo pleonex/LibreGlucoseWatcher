@@ -321,8 +321,7 @@ public partial class MainWindow : Form
                 await FetchGlucose().ConfigureAwait(true);
                 DisplayGlucose();
             }
-        }
-        catch (Exception ex)
+        } catch (Exception ex)
         {
             labelGlucose.Text = ex.Message;
         }

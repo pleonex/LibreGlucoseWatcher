@@ -295,12 +295,12 @@
             // boxRefreshPeriod
             // 
             boxRefreshPeriod.Location = new Point(188, 70);
-            boxRefreshPeriod.Maximum = new decimal(new int[] { 60, 0, 0, 0 });
+            boxRefreshPeriod.Maximum = new decimal(new int[] { 600, 0, 0, 0 });
             boxRefreshPeriod.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             boxRefreshPeriod.Name = "boxRefreshPeriod";
             boxRefreshPeriod.Size = new Size(156, 31);
             boxRefreshPeriod.TabIndex = 4;
-            boxRefreshPeriod.Value = new decimal(new int[] { 5, 0, 0, 0 });
+            boxRefreshPeriod.Value = new decimal(new int[] { 15, 0, 0, 0 });
             boxRefreshPeriod.ValueChanged += BoxRefreshPeriodValueChanged;
             // 
             // labelRefresh
