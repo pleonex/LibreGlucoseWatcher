@@ -6,7 +6,7 @@
              Title="LibreGlucoseWatcher"
              BackgroundColor="White">
     <Grid
-        RowDefinitions="170,*,70"
+        RowDefinitions="190,*,70"
         ColumnDefinitions="*">
 
         <Border
@@ -39,7 +39,7 @@
 
                 <Grid 
                     RowDefinitions="Auto,Auto"
-                    ColumnDefinitions="*,Auto,120"
+                    ColumnDefinitions="*,Auto,140"
                     HorizontalOptions="Center"
                     ColumnSpacing="7" >
 
@@ -78,6 +78,18 @@
                         FontSize="18"
                         Text="{Binding PreviousMeasurementOverview}" />
                 </Grid>
+
+                <Button
+                    WidthRequest="50"
+                    HeightRequest="40"
+                    BackgroundColor="Transparent"
+                    HorizontalOptions="End"
+                    FontFamily="SymbolsRegular"
+                    FontSize="18"
+                    TextColor="White"
+                    BorderWidth="1"
+                    Text="&#xf0453;"
+                    Command="{Binding FetchGlucoseCommand}" />
             </VerticalStackLayout>
         </Border>
 
