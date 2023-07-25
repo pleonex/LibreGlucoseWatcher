@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PleOps.LibreGlucoseWatcher.Maui.Pages.HomePage"
+             Shell.NavBarIsVisible="False"
+             Loaded="ContentPage_Loaded">
+    <Grid
+        RowDefinitions="Auto,*,Auto"
+        ColumnDefinitions="*">
+
+        <Border Grid.Row="0" Grid.Column="0"
+            StrokeThickness="0"
+            BackgroundColor="{Binding CurrentGlucoseColor}"
+            HeightRequest="150">
+
+            <Grid 
+                RowDefinitions="Auto,Auto"
+                ColumnDefinitions="Auto,Auto"
+                ColumnSpacing="5"
+                HorizontalOptions="Center"
+                VerticalOptions="Center" >
+
+                <Label Grid.Row="0" Grid.Column="0" Grid.RowSpan="2"
+                    VerticalTextAlignment="End"
+                    Text="{Binding CurrentBloodLevel}"
+                    TextColor="White"
+                    FontFamily="FiraSansBold"
+                    FontSize="74" />
+
+                <Label Grid.Row="0" Grid.Column="1"
+                    FontFamily="FiraSansBold"
+                    VerticalOptions="End"
+                    HorizontalOptions="Center"
+                    TextColor="White"
+                    Text="{Binding CurrentTrend}"
+                    FontSize="38" />
+
+                <Label Grid.Row="1" Grid.Column="1"
+                    FontFamily="FiraSansBold"
+                    TextColor="White"
+                    Text="{Binding UnitText}"
+                    VerticalOptions="Start"
+                    FontSize="16" />
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="1" Grid.Column="0"
+            StrokeThickness="3"
+            BackgroundColor="White"
+            VerticalOptions="FillAndExpand">
+        </Border>
+
+        <Button Grid.Row="2" Grid.Column="0"
+            Margin="10"
+            FontSize="Medium"
+            IsEnabled="False"
+            Text="Add note" />
+    </Grid>
+</ContentPage>

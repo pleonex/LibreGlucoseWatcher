@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PleOps.LibreGlucoseWatcher.Maui.Pages.LoginPage"
+             Shell.NavBarIsVisible="False"
+             Shell.FlyoutBehavior="Disabled"
+             BackgroundColor="{StaticResource Secondary}">
+
+    <Grid
+        RowDefinitions="Auto,Auto,*,Auto,Auto,*"
+        ColumnDefinitions="Auto,*"
+        RowSpacing="10"
+        ColumnSpacing="10"
+        Margin="30">
+        
+        <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+            Text="Welcome!"
+            FontSize="Header"
+            HorizontalOptions="Center" />
+        <Image Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+            Source="dotnet_bot.png"
+            HeightRequest="75"
+            />
+        <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+            VerticalOptions="End"
+            Text="Login to your LibreLinkUp account"
+            FontFamily="FiraSansItalic"
+            FontSize="Subtitle"
+            TextColor="{StaticResource Gray600}"
+            HorizontalOptions="Center" />
+
+        <Label Grid.Row="3" Grid.Column="0"
+            Text="Email:"
+            FontFamily="FiraSansBold"
+            VerticalTextAlignment="Center" />
+        <Entry Grid.Row="3" Grid.Column="1"
+            Keyboard="Email"
+            BackgroundColor="White"
+            MaximumWidthRequest="750"
+            HorizontalOptions="FillAndExpand"
+            Placeholder="Enter your LibreLinkUp email"
+            Text="{Binding Email}" />
+
+        <Label Grid.Row="4" Grid.Column="0"
+            Text="Password:"
+            FontFamily="FiraSansBold"
+            VerticalTextAlignment="Center" />
+        <Entry Grid.Row="4" Grid.Column="1"
+            IsPassword="True"
+            BackgroundColor="White"
+            MaximumWidthRequest="750"
+            HorizontalOptions="FillAndExpand"
+            Placeholder="Enter your LibreLinkUp password"
+            Text="{Binding Password}" />
+
+        <Button Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2"
+            HeightRequest="30"
+            MaximumWidthRequest="250"
+            VerticalOptions="Start"
+            Margin="10"
+            FontSize="18"
+            Text="Login"
+            Command="{Binding LoginCommand}" />
+        <ActivityIndicator Grid.Row="5" Grid.Column="0"
+            VerticalOptions="Start"
+            Margin="0,15,0,0"
+            IsRunning="{Binding LoginCommand.IsRunning}" />
+    </Grid>
+</ContentPage>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PleOps.LibreGlucoseWatcher.Maui.Pages.AuthLoadingPage"
+             Shell.NavBarIsVisible="False"
+             Shell.FlyoutBehavior="Disabled"
+             BackgroundColor="{StaticResource Secondary}"
+             Loaded="ContentPage_Loaded">
+    
+    <VerticalStackLayout
+        VerticalOptions="Center"
+        Spacing="20">
+
+        <Image
+                Source="dotnet_bot.png"
+                Margin="0,0,0,20"
+                WidthRequest="150" />
+        <Label
+               HorizontalOptions="Center"
+               VerticalOptions="End"
+               Text="Loading please wait..." />
+        <ActivityIndicator
+            IsRunning="True"
+            VerticalOptions="Start" />
+
+    </VerticalStackLayout>
+</ContentPage>
