@@ -28,9 +28,6 @@ public partial class AuthLoadingViewModel
     [RelayCommand]
     private async Task FindToken()
     {
-        // To show my cool intro page, TODO: remove later...
-        await Task.Delay(2_000).ConfigureAwait(true);
-
         try
         {
             var authData = await LibreGlucoseSettings.GetAuthDataAsync();

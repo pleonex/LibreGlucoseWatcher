@@ -18,6 +18,7 @@
         <Label
                HorizontalOptions="Center"
                VerticalOptions="End"
+               TextColor="Black"
                Text="Loading please wait..." />
         <ActivityIndicator
             IsRunning="True"

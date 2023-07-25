@@ -9,9 +9,4 @@ public partial class HomePage : ContentPage
     }
 
     internal HomeViewModel ViewModel => (BindingContext as HomeViewModel)!;
-
-    private async void ContentPage_Loaded(object sender, EventArgs e)
-    {
-        await ViewModel.FetchGlucoseCommand.ExecuteAsync(null);
-    }
 }

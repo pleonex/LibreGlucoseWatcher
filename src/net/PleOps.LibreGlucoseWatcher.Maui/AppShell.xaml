@@ -29,12 +29,12 @@
         <ShellContent
             Title="Settings"
             ContentTemplate="{DataTemplate pages:SettingsPage}"
-            IsEnabled="False"
+            IsVisible="False"
             Route="Settings" />
     </FlyoutItem>
 
     <ShellContent
         Title="About"
-        IsEnabled="False"
+        IsVisible="False"
         Route="about" />
 </Shell>

@@ -7,7 +7,7 @@
              BackgroundColor="{StaticResource Secondary}">
 
     <Grid
-        RowDefinitions="Auto,Auto,*,Auto,Auto,*"
+        RowDefinitions="*,Auto,*,Auto,Auto,Auto"
         ColumnDefinitions="Auto,*"
         RowSpacing="10"
         ColumnSpacing="10"
@@ -15,7 +15,10 @@
         
         <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
             Text="Welcome!"
-            FontSize="Header"
+            TextColor="{StaticResource Primary}"
+            FontFamily="FiraSansBold"
+            FontSize="40"
+            VerticalOptions="End"
             HorizontalOptions="Center" />
         <Image Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
             Source="dotnet_bot.png"
@@ -23,19 +26,23 @@
             />
         <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
             VerticalOptions="End"
-            Text="Login to your LibreLinkUp account"
-            FontFamily="FiraSansItalic"
-            FontSize="Subtitle"
-            TextColor="{StaticResource Gray600}"
+            Text="Login with your LibreLinkUp account"
+            Margin="0,0,0,10"
+            FontFamily="FiraSansRegular"
+            FontSize="18"
+            TextColor="{StaticResource Primary}"
             HorizontalOptions="Center" />
 
         <Label Grid.Row="3" Grid.Column="0"
             Text="Email:"
             FontFamily="FiraSansBold"
+            FontSize="16"
+            TextColor="{StaticResource Primary}"
             VerticalTextAlignment="Center" />
         <Entry Grid.Row="3" Grid.Column="1"
             Keyboard="Email"
             BackgroundColor="White"
+            TextColor="{StaticResource Primary}"
             MaximumWidthRequest="750"
             HorizontalOptions="FillAndExpand"
             Placeholder="Enter your LibreLinkUp email"
@@ -43,18 +50,21 @@
 
         <Label Grid.Row="4" Grid.Column="0"
             Text="Password:"
+            FontSize="16"
             FontFamily="FiraSansBold"
+            TextColor="{StaticResource Primary}"
             VerticalTextAlignment="Center" />
         <Entry Grid.Row="4" Grid.Column="1"
             IsPassword="True"
             BackgroundColor="White"
+            TextColor="{StaticResource Primary}"
             MaximumWidthRequest="750"
             HorizontalOptions="FillAndExpand"
             Placeholder="Enter your LibreLinkUp password"
             Text="{Binding Password}" />
 
         <Button Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2"
-            HeightRequest="30"
+            HeightRequest="50"
             MaximumWidthRequest="250"
             VerticalOptions="Start"
             Margin="10"
