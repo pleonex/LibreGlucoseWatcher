@@ -16,7 +16,7 @@ public partial class HomeViewModel : ObservableObject, IDisposable
     private const string ArrowDown45 = "\u2198";
     private const string ArrowDown = "\u2193";
 
-    private const int FetchTimerMs = 5 * 60 * 1000;
+    private const int FetchTimerMs = 1 * 60 * 1000;
 
     private readonly LibreGlucoseClient client;
     private readonly ILogger<HomeViewModel> logger;
@@ -44,6 +44,9 @@ public partial class HomeViewModel : ObservableObject, IDisposable
 
     [ObservableProperty]
     private string previousMeasurementOverview = string.Empty;
+
+    [ObservableProperty]
+    private string fetchTime = string.Empty;
 
     public HomeViewModel(LibreGlucoseClient client, ILogger<HomeViewModel> logger)
     {
@@ -76,18 +79,21 @@ public partial class HomeViewModel : ObservableObject, IDisposable
             PatientName = $"{patientData.FirstName} {patientData.LastName}";
 
             var timestamp = ParseMeasurementTimestamp(currentMeasurement.Timestamp);
-            var diff = DateTime.UtcNow - timestamp;
+            var now = DateTime.UtcNow;
+            var diff = now - timestamp;
             MeasurementTime = (diff.TotalHours < 24)
-                ? timestamp.ToShortTimeString()
-                : $"{timestamp.ToShortDateString()} {timestamp.ToShortTimeString()}";
+                ? timestamp.ToLocalTime().ToShortTimeString()
+                : $"{timestamp.ToLocalTime().ToShortDateString()} {timestamp.ToLocalTime().ToShortTimeString()}";
 
-            if (previous is not null)
+            if (previous is not null && previous.Timestamp != currentMeasurement.Timestamp)
             {
                 var prevTimestamp = ParseMeasurementTimestamp(previous.Timestamp);
                 PreviousMeasurementOverview = $"{previous.ValueInMgPerDl} mg/dL " +
                     $"({currentMeasurement.ValueInMgPerDl - previous.ValueInMgPerDl:+#;-#;0})\n" +
                     $"{prevTimestamp.ToShortTimeString()}";
             }
+
+            FetchTime = $"Last check: {now.ToLocalTime().ToShortTimeString()}";
         }
         catch (Exception ex)
         {
