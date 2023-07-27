@@ -6,7 +6,7 @@
              Title="LibreGlucoseWatcher"
              BackgroundColor="White">
     <Grid
-        RowDefinitions="190,*,70"
+        RowDefinitions="205,*,70"
         ColumnDefinitions="*">
 
         <Border

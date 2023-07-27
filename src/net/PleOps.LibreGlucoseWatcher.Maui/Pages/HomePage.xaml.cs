@@ -7,6 +7,4 @@ public partial class HomePage : ContentPage
         BindingContext = viewModel;
         InitializeComponent();
     }
-
-    internal HomeViewModel ViewModel => (BindingContext as HomeViewModel)!;
 }

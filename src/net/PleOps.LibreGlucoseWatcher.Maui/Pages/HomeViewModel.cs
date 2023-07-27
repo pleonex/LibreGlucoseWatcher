@@ -101,23 +101,24 @@ public partial class HomeViewModel : ObservableObject, IDisposable
         }
     }
 
-    private static string TrendToUnicode(int tendency) =>
+    private static string TrendToUnicode(TrendArrow tendency) =>
         tendency switch
         {
-            1 => ArrowDown,
-            2 => ArrowDown45,
-            3 => ArrowRight,
-            4 => ArrowUp45,
-            5 => ArrowUp,
+            TrendArrow.DecreasingRapidly => ArrowDown,
+            TrendArrow.Decreasing => ArrowDown45,
+            TrendArrow.Stable => ArrowRight,
+            TrendArrow.Increasing => ArrowUp45,
+            TrendArrow.IncreasingRapidly => ArrowUp,
             _ => "?",
         };
 
-    private static Color MeasurementColorToColor(int color) =>
+    private static Color MeasurementColorToColor(MeasurementColor color) =>
         color switch
         {
-            1 => Colors.Green,
-            2 => Colors.DarkOrange,
-            3 => Colors.OrangeRed,
+            MeasurementColor.InRange => Colors.Green,
+            MeasurementColor.OutsideRange => Colors.DarkOrange,
+            MeasurementColor.HighAlarm => Colors.OrangeRed,
+            MeasurementColor.LowAlarm => Colors.OrangeRed,
             _ => Colors.Gray,
         };
 
@@ -125,7 +126,7 @@ public partial class HomeViewModel : ObservableObject, IDisposable
     {
         DateTime timestamp = DateTime.ParseExact(
                 timestampText,
-                "M/d/yyyy h:m:s tt",
+                GlucoseMeasurement.TimeStampFormat,
                 CultureInfo.InvariantCulture);
         var sourceTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
         

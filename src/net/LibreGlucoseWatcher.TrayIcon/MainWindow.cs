@@ -12,7 +12,7 @@ public partial class MainWindow : Form
 {
     private readonly LibreGlucoseClient client;
     private readonly SoundPlayer soundPlayer;
-    private Datum[]? lastMeasurement;
+    private PatientInfo[]? lastMeasurement;
     private bool wantToClose = false;
 
     public MainWindow()
@@ -35,7 +35,7 @@ public partial class MainWindow : Form
             if (authData is null)
             {
                 labelToken.Text = "Invalid token file - Re-enter login details";
-                UpdateTrayIcon("?", "", 2, "Login first");
+                UpdateTrayIcon("?", "", MeasurementColor.Unknown, "Login first");
                 File.Delete(AuthFileEncryption.AuthPath);
             } else
             {
@@ -46,7 +46,7 @@ public partial class MainWindow : Form
         } else
         {
             labelToken.Text = "Missing token - Enter login details.";
-            UpdateTrayIcon("?", "", 2, "Login first");
+            UpdateTrayIcon("?", "", MeasurementColor.Unknown, "Login first");
         }
 
         if (logged)
@@ -100,7 +100,7 @@ public partial class MainWindow : Form
         if (boxPatientId.Value >= lastMeasurement.Length)
         {
             labelGlucose.Text = $"Invalid patient ID. Maximum: {lastMeasurement.Length - 1}";
-            UpdateTrayIcon("?", "", 2, "Invalid settings");
+            UpdateTrayIcon("?", "", MeasurementColor.Unknown, "Invalid settings");
             return;
         }
 
@@ -111,11 +111,11 @@ public partial class MainWindow : Form
             : (measurement.Value, "mmol/L");
         string arrowText = measurement.TrendArrow switch
         {
-            1 => "↓↓",
-            2 => "↓",
-            3 => "→",
-            4 => "↑",
-            5 => "↑↑",
+            TrendArrow.DecreasingRapidly => "↓↓",
+            TrendArrow.Decreasing => "↓",
+            TrendArrow.Stable => "→",
+            TrendArrow.Increasing => "↑",
+            TrendArrow.IncreasingRapidly => "↑↑",
             _ => "?",
         };
         DateTime timestamp = DateTime.ParseExact(
@@ -198,7 +198,7 @@ public partial class MainWindow : Form
         DisplayGlucose();
     }
 
-    private void UpdateTrayIcon(string glucose, string units, int colorId, string timestamp)
+    private void UpdateTrayIcon(string glucose, string units, MeasurementColor colorId, string timestamp)
     {
         var font = new Font(FontFamily.GenericSerif, 20);
         string text = glucose.Replace(" ", "\n");
@@ -212,9 +212,10 @@ public partial class MainWindow : Form
 
         Brush color = colorId switch
         {
-            1 => Brushes.Green,
-            2 => Brushes.Orange,
-            3 => Brushes.Red,
+            MeasurementColor.InRange => Brushes.Green,
+            MeasurementColor.OutsideRange => Brushes.Orange,
+            MeasurementColor.HighAlarm => Brushes.Red,
+            MeasurementColor.LowAlarm => Brushes.Red,
             _ => Brushes.White,
         };
         graphic.FillRectangle(color, 0, 0, image.Width, image.Height);
