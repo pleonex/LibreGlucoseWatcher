@@ -3,6 +3,16 @@ using System.Net.Http.Json;
 
 namespace PleOps.LibreGlucose.Connection;
 
+// APIs:
+// POST llu/auth/login: login with email and password
+// POST llu/auth/register + data payload with account info: register new account
+// GET auth/continue: register step 2 to validate email
+// POST auth/continue/{type}: email validation?
+// POST auth/resendVerifyEmail
+// POST auth/forgotpassword + { email }
+// POST auth/changepassword + { oldpassword, password }
+// GET llu/legacytoken + header { UserToken }
+// POST llu/auth/deleteaccount + { email, password }
 public class LoginHandler
 {
     private readonly HttpClient client;
@@ -28,10 +38,10 @@ public class LoginHandler
 
     public async Task LoginAsync(LoginParameters parameters)
     {
-        string uri = LibreGlucoseClient.ApiUrl + "llu/auth/login";
+        string uri = "llu/auth/login";
 
         var result = await client.PostAsJsonAsync(uri, parameters).ConfigureAwait(false);
-        result.EnsureSuccessStatusCode();
+        _ = result.EnsureSuccessStatusCode();
 
         var content = await result.Content.ReadFromJsonAsync<LoginResult>().ConfigureAwait(false);
 
