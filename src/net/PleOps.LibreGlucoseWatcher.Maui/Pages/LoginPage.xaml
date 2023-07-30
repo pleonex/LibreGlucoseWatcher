@@ -45,7 +45,6 @@
             TextColor="{StaticResource Primary}"
             MaximumWidthRequest="750"
             HorizontalOptions="FillAndExpand"
-            Placeholder="Enter your LibreLinkUp email"
             Text="{Binding Email}" />
 
         <Label Grid.Row="4" Grid.Column="0"
@@ -60,7 +59,6 @@
             TextColor="{StaticResource Primary}"
             MaximumWidthRequest="750"
             HorizontalOptions="FillAndExpand"
-            Placeholder="Enter your LibreLinkUp password"
             Text="{Binding Password}" />
 
         <Button Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2"

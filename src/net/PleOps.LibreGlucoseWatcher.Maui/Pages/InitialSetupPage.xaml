@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:pages="clr-namespace:PleOps.LibreGlucoseWatcher.Maui.Pages"
+             x:Class="PleOps.LibreGlucoseWatcher.Maui.Pages.InitialSetupPage"
+             Shell.NavBarIsVisible="False"
+             Shell.FlyoutBehavior="Disabled"
+             BackgroundColor="{StaticResource White}"
+             Loaded="ContentPage_Loaded" >
+
+    <Grid
+        ColumnDefinitions="*"
+        RowDefinitions="Auto,Auto,Auto,Auto,50"
+        VerticalOptions="Center"
+        HorizontalOptions="Center">
+
+        <Label
+            Grid.Row="0" Grid.Column="0"
+            TextColor="Black"
+            FontFamily="FiraSansRegular"
+            Text="Glucose units:"
+               />
+        <Picker
+            Grid.Row="1" Grid.Column="0"
+            Margin="0,0,0,30"
+            MinimumWidthRequest="150"
+            FontFamily="FiraSansRegular"
+            ItemsSource="{Binding GlucoseUnits}"
+            SelectedIndex="{Binding SelectedUnitIdx}"/>
+
+        <Label
+            Grid.Row="2" Grid.Column="0"
+            TextColor="Black"
+            FontFamily="FiraSansRegular"
+            Text="Person to monitor:"
+               />
+        <Picker
+            Grid.Row="3" Grid.Column="0"
+            Margin="0,0,0,30"
+            MinimumWidthRequest="300"
+            FontFamily="FiraSansRegular"
+            ItemsSource="{Binding Patients}"
+            ItemDisplayBinding="{Binding FullName}"
+            SelectedItem="{Binding SelectedPatient}" />
+
+        <Button
+            Grid.Row="4" Grid.Column="0"
+            Text="Continue"
+            HorizontalOptions="Center"
+            WidthRequest="200"
+            HeightRequest="45"
+            Command="{Binding SaveAndContinueCommand}" />
+    </Grid>
+
+</ContentPage>

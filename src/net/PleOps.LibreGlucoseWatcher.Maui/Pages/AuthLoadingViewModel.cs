@@ -3,7 +3,6 @@ using Microsoft.Extensions.Logging;
 using PleOps.LibreGlucose;
 using PleOps.LibreGlucose.Connection;
 using PleOps.LibreGlucoseWatcher.Maui.Mvvm;
-using System.Text.Json;
 
 namespace PleOps.LibreGlucoseWatcher.Maui.Pages;
 
@@ -21,16 +20,18 @@ public partial class AuthLoadingViewModel
         this.logger = logger;
     }
 
-    public AsyncInteraction FoundValidToken { get; } = new();
+    public AsyncInteraction FoundValidSettings { get; } = new();
 
     public AsyncInteraction FoundInvalidToken { get; } = new();
+
+    public AsyncInteraction NeedPatientSelection { get; } = new();
 
     [RelayCommand]
     private async Task FindToken()
     {
         try
         {
-            var authData = await LibreGlucoseSettings.GetAuthDataAsync();
+            var authData = await UserSettings.GetAuthDataAsync();
             if (authData is null || HasExpired(authData))
             {
                 await FoundInvalidToken.HandleAsync();
@@ -38,7 +39,12 @@ public partial class AuthLoadingViewModel
             else
             {
                 client.Login.AuthenticationData = authData;
-                await FoundValidToken.HandleAsync();
+
+                if (!string.IsNullOrEmpty(UserSettings.GetPatientId())) {
+                    await FoundValidSettings.HandleAsync();
+                } else {
+                    await NeedPatientSelection.HandleAsync();
+                }
             }
         }
         catch (Exception ex)

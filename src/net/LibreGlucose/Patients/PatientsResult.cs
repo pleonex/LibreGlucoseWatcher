@@ -1,16 +1,6 @@
 ﻿using System.Text.Json.Serialization;
-using PleOps.LibreGlucose.Connection;
 
 namespace PleOps.LibreGlucose.Patients;
-
-public record PatientsResult
-{
-    public int Status { get; init; }
-
-    public PatientInfo[] Data { get; init; } = Array.Empty<PatientInfo>();
-
-    public TicketInfo Ticket { get; init; } = null!;
-}
 
 public record PatientInfo
 {
@@ -43,6 +33,12 @@ public record PatientInfo
     public string LastName { get; set; } = string.Empty;
 
     /// <summary>
+    /// Gets the combination of first and last names.
+    /// </summary>
+    [JsonIgnore]
+    public string FullName => $"{FirstName} {LastName}";
+
+    /// <summary>
     /// Gets or sets the patient configured target low for reports (not alarms).
     /// </summary>
     public int TargetLow { get; set; }
@@ -53,7 +49,7 @@ public record PatientInfo
     public int TargetHigh { get; set; }
 
     [JsonPropertyName("uom")] // Units Of Measurement?
-    public GlucoseUnits MeasureUnits { get; set; }
+    public GlucoseUnit MeasureUnits { get; set; }
 
     /// <summary>
     /// Gets or sets the current sensor information.
@@ -65,12 +61,6 @@ public record PatientInfo
     public GlucoseMeasurement GlucoseItem { get; set; } = new();
     public PatientDevice PatientDevice { get; set; } = new();
     public long Created { get; set; }
-}
-
-public enum GlucoseUnits
-{
-    MmolL = 0,
-    mmgDl = 1,
 }
 
 public record SensorInfo
@@ -196,6 +186,8 @@ public enum MeasurementType
 {
     Normal = 0,
     IncludeTrend = 1,
+    Unknown2 = 2,
+    Unknown3 = 3,
 }
 
 public enum TrendArrow
@@ -228,7 +220,7 @@ public record GlucoseMeasurement
     public TrendArrow TrendArrow { get; set; }
     public string? TrendMessage { get; set; }
     public MeasurementColor MeasurementColor { get; set; }
-    public GlucoseUnits GlucoseUnits { get; set; }
+    public GlucoseUnit GlucoseUnits { get; set; }
     public float Value { get; set; }
     public bool IsHigh { get; set; }
     public bool IsLow { get; set; }

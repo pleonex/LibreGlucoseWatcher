@@ -19,7 +19,13 @@
         ContentTemplate="{DataTemplate pages:LoginPage}"
         Route="Login"
         FlyoutItemIsVisible="False" />
-        
+
+    <ShellContent
+        Title="InitialSetup"
+        ContentTemplate="{DataTemplate pages:InitialSetupPage}"
+        Route="InitialSetup"
+        FlyoutItemIsVisible="False" />
+
     <!-- Start of main navigation -->
     <FlyoutItem FlyoutDisplayOptions="AsMultipleItems">
         <ShellContent

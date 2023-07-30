@@ -31,7 +31,7 @@ try
         await AuthFileEncryption.WriteToken(authData).ConfigureAwait(false);
     }
 
-    var patients = await client.Patients.Get().ConfigureAwait(false);
+    var patients = await client.Patients.GetConnections().ConfigureAwait(false);
     AnsiConsole.MarkupLine("[green]Glucose: {0} mg/dL[/]", patients.Data[0].GlucoseMeasurement.ValueInMgPerDl);
 }
 catch (Exception ex)

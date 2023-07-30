@@ -38,7 +38,7 @@ public partial class LoginViewModel : ObservableObject
         {
             await client.Login.LoginAsync(loginParams);
 
-            await LibreGlucoseSettings.SetAuthDataAsync(client.Login.AuthenticationData);
+            await UserSettings.SetAuthDataAsync(client.Login.AuthenticationData);
 
             await SuccessfulLogin.HandleAsync();
         } catch (Exception ex)

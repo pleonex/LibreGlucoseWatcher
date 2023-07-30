@@ -69,7 +69,7 @@ public partial class HomeViewModel : ObservableObject, IDisposable
         {
             var previous = currentMeasurement;
 
-            var latestMeasurement = await client.Patients.Get();
+            var latestMeasurement = await client.Patients.GetConnections();
             var patientData = latestMeasurement.Data[0];
             currentMeasurement = patientData.GlucoseMeasurement;
 

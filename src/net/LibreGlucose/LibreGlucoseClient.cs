@@ -19,6 +19,8 @@ public class LibreGlucoseClient
         client.DefaultRequestHeaders.Add("version", ApiVersion);
         client.DefaultRequestHeaders.Add("product", ApiProduct);
 
+        client.BaseAddress = new Uri(ApiUrl);
+
         Login = new LoginHandler(client);
         Patients = new PatientsHandler(client);
     }

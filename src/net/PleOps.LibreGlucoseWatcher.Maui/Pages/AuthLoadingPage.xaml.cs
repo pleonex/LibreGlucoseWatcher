@@ -1,4 +1,4 @@
-namespace PleOps.LibreGlucoseWatcher.Maui.Pages;
+﻿namespace PleOps.LibreGlucoseWatcher.Maui.Pages;
 
 public partial class AuthLoadingPage : ContentPage
 {
@@ -7,8 +7,9 @@ public partial class AuthLoadingPage : ContentPage
         BindingContext = viewModel;
         InitializeComponent();
 
-        viewModel.FoundValidToken.RegisterHandler(OnValidTokenAsync);
+        viewModel.FoundValidSettings.RegisterHandler(OnValidTokenAsync);
         viewModel.FoundInvalidToken.RegisterHandler(OnInvalidTokenAsync);
+        viewModel.NeedPatientSelection.RegisterHandler(OnPatientSelectionRequiredAsync);
     }
 
     internal AuthLoadingViewModel ViewModel => (BindingContext as AuthLoadingViewModel)!;
@@ -19,8 +20,9 @@ public partial class AuthLoadingPage : ContentPage
     private async Task OnInvalidTokenAsync() =>
         await Shell.Current.GoToAsync("//Login").ConfigureAwait(true);
 
-    private async void ContentPage_Loaded(object sender, EventArgs e)
-    {
+    private async Task OnPatientSelectionRequiredAsync() =>
+        await Shell.Current.GoToAsync("//InitialSetup").ConfigureAwait(true);
+
+    private async void ContentPage_Loaded(object sender, EventArgs e) =>
         await ViewModel.FindTokenCommand.ExecuteAsync(null);
-    }
 }

@@ -86,7 +86,7 @@ public partial class MainWindow : Form
 
     private async Task FetchGlucose()
     {
-        var patients = await client.Patients.Get().ConfigureAwait(false);
+        var patients = await client.Patients.GetConnections().ConfigureAwait(false);
         lastMeasurement = patients.Data;
     }
 

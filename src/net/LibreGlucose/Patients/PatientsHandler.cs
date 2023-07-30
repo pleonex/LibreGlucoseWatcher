@@ -12,9 +12,13 @@ public class PatientsHandler
         this.client = client;
     }
 
-    public async Task<PatientsResult> Get()
+    public async Task<QueryResult<PatientInfo[]>> GetConnections()
     {
-        string uri = LibreGlucoseClient.ApiUrl + "llu/connections";
+        string uri = "llu/connections";
+
+        return await client.GetFromJsonAsync<QueryResult<PatientInfo[]>>(uri).ConfigureAwait(false)
+            ?? throw new FormatException("Invalid server reply");
+    }
 
         var result = await client.GetFromJsonAsync<PatientsResult>(uri).ConfigureAwait(false);
         if (result is null)

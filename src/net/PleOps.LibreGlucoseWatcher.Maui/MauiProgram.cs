@@ -32,21 +32,24 @@ public static class MauiProgram
 
     private static MauiAppBuilder RegisterAppServices(this MauiAppBuilder builder)
     {
-        builder.Services.AddSingleton<LibreGlucoseClient>();
+        _ = builder.Services.AddSingleton<LibreGlucoseClient>();
 
         return builder;
     }
 
     private static MauiAppBuilder RegisterViewModelsWithViews(this MauiAppBuilder builder)
     {
-        builder.Services.AddSingleton<AuthLoadingPage>();
-        builder.Services.AddSingleton<AuthLoadingViewModel>();
+        _ = builder.Services.AddSingleton<AuthLoadingPage>()
+            .AddSingleton<AuthLoadingViewModel>();
 
-        builder.Services.AddSingleton<LoginPage>();
-        builder.Services.AddSingleton<LoginViewModel>();
+        _ = builder.Services.AddSingleton<LoginPage>()
+            .AddSingleton<LoginViewModel>();
 
-        builder.Services.AddSingleton<HomePage>();
-        builder.Services.AddSingleton<HomeViewModel>();
+        _ = builder.Services.AddSingleton<InitialSetupPage>()
+            .AddSingleton<InitialSetupViewModel>();
+
+        _ = builder.Services.AddSingleton<HomePage>()
+            .AddSingleton<HomeViewModel>();
 
         return builder;
     }
