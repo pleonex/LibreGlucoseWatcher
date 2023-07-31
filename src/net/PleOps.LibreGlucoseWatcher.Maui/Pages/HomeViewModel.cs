@@ -102,10 +102,13 @@ public partial class HomeViewModel : ObservableObject, IDisposable
 
             FetchTime = $"@ {now.ToLocalTime().ToShortTimeString()}";
 
+            // It seems they have a bug and the connection value is sooner than graph...
+            var measurements = graphResult.Data.GraphData.Append(graphResult.Data.Patient.GlucoseMeasurement);
+
             GraphData = new ISeries[] {
                 new LineSeries<int>
                 {
-                    Values = graphResult.Data.GraphData.Select(m => m.ValueInMgPerDl),
+                    Values = measurements.Select(m => m.ValueInMgPerDl),
                 }
             };
 
@@ -113,7 +116,7 @@ public partial class HomeViewModel : ObservableObject, IDisposable
                 new Axis
                 {
                     Name = "Time",
-                    Labels = graphResult.Data.GraphData.Select(m => m.UtcTimestamp.ToLocalTime().ToShortTimeString()).ToList(),
+                    Labels = measurements.Select(m => m.UtcTimestamp.ToLocalTime().ToShortTimeString()).ToList(),
                     
                 },
             };
