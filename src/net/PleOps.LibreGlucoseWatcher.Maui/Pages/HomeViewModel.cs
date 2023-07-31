@@ -1,10 +1,10 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using LiveChartsCore;
+using LiveChartsCore.SkiaSharpView;
 using Microsoft.Extensions.Logging;
 using PleOps.LibreGlucose;
 using PleOps.LibreGlucose.Patients;
-using System.Diagnostics.Metrics;
-using System.Globalization;
 
 namespace PleOps.LibreGlucoseWatcher.Maui.Pages;
 
@@ -37,7 +37,7 @@ public partial class HomeViewModel : ObservableObject, IDisposable
     private string unitText = "mg/dL";
 
     [ObservableProperty]
-    private string patientName = "Unknown";
+    private string? patientName;
 
     [ObservableProperty]
     private string measurementTime = string.Empty;
@@ -47,6 +47,12 @@ public partial class HomeViewModel : ObservableObject, IDisposable
 
     [ObservableProperty]
     private string fetchTime = string.Empty;
+
+    [ObservableProperty]
+    private ISeries[] graphData = Array.Empty<ISeries>();
+
+    [ObservableProperty]
+    private Axis[] graphXAxes = Array.Empty<Axis>();
 
     public HomeViewModel(LibreGlucoseClient client, ILogger<HomeViewModel> logger)
     {
@@ -67,18 +73,20 @@ public partial class HomeViewModel : ObservableObject, IDisposable
     {
         try
         {
-            var previous = currentMeasurement;
+            string patId = UserSettings.GetPatientId()!;
 
-            var latestMeasurement = await client.Patients.GetConnections();
-            var patientData = latestMeasurement.Data[0];
-            currentMeasurement = patientData.GlucoseMeasurement;
+            var previous = currentMeasurement;
+            var graphResult = await client.Patients.GetGraph(patId);
+            currentMeasurement = graphResult.Data.Patient.GlucoseMeasurement;
+
+            var patientInfo = graphResult.Data.Patient;
+            PatientName = $"{patientInfo.FirstName} {patientInfo.LastName}";
 
             CurrentGlucose = currentMeasurement.ValueInMgPerDl.ToString();
             CurrentTrend = TrendToUnicode(currentMeasurement.TrendArrow);
             CurrentGlucoseColor = MeasurementColorToColor(currentMeasurement.MeasurementColor);
-            PatientName = $"{patientData.FirstName} {patientData.LastName}";
 
-            var timestamp = ParseMeasurementTimestamp(currentMeasurement.Timestamp);
+            var timestamp = currentMeasurement.UtcTimestamp;
             var now = DateTime.UtcNow;
             var diff = now - timestamp;
             MeasurementTime = (diff.TotalHours < 24)
@@ -87,13 +95,28 @@ public partial class HomeViewModel : ObservableObject, IDisposable
 
             if (previous is not null && previous.Timestamp != currentMeasurement.Timestamp)
             {
-                var prevTimestamp = ParseMeasurementTimestamp(previous.Timestamp);
                 PreviousMeasurementOverview = $"{previous.ValueInMgPerDl} mg/dL " +
                     $"({currentMeasurement.ValueInMgPerDl - previous.ValueInMgPerDl:+#;-#;0})\n" +
-                    $"{prevTimestamp.ToShortTimeString()}";
+                    $"{previous.UtcTimestamp.ToShortTimeString()}";
             }
 
-            FetchTime = $"Last check: {now.ToLocalTime().ToShortTimeString()}";
+            FetchTime = $"@ {now.ToLocalTime().ToShortTimeString()}";
+
+            GraphData = new ISeries[] {
+                new LineSeries<int>
+                {
+                    Values = graphResult.Data.GraphData.Select(m => m.ValueInMgPerDl),
+                }
+            };
+
+            GraphXAxes = new Axis[] {
+                new Axis
+                {
+                    Name = "Time",
+                    Labels = graphResult.Data.GraphData.Select(m => m.UtcTimestamp.ToLocalTime().ToShortTimeString()).ToList(),
+                    
+                },
+            };
         }
         catch (Exception ex)
         {
@@ -121,17 +144,6 @@ public partial class HomeViewModel : ObservableObject, IDisposable
             MeasurementColor.LowAlarm => Colors.OrangeRed,
             _ => Colors.Gray,
         };
-
-    private static DateTime ParseMeasurementTimestamp(string timestampText)
-    {
-        DateTime timestamp = DateTime.ParseExact(
-                timestampText,
-                GlucoseMeasurement.TimeStampFormat,
-                CultureInfo.InvariantCulture);
-        var sourceTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
-        
-        return TimeZoneInfo.ConvertTimeToUtc(timestamp, sourceTimeZone);
-    }
 
     public void Dispose()
     {

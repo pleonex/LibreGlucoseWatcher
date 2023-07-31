@@ -41,19 +41,19 @@ public class PatientsHandler
             ?? throw new FormatException("Invalid server reply");
     }
 
-    public async Task<QueryResult<object>> GetGraph(string patientId)
+    public async Task<QueryResult<GlucoseGraphData>> GetGraph(string patientId)
     {
         string uri = $"llu/connections/{patientId}/graph";
 
-        return await client.GetFromJsonAsync<QueryResult<object>>(uri).ConfigureAwait(false)
+        return await client.GetFromJsonAsync<QueryResult<GlucoseGraphData>>(uri).ConfigureAwait(false)
             ?? throw new FormatException("Invalid server reply");
     }
 
-    public async Task<QueryResult<object>> GetLogbook(string patientId)
+    public async Task<QueryResult<GlucoseMeasurement[]>> GetLogbook(string patientId)
     {
         string uri = $"llu/connections/{patientId}/logbook";
 
-        return await client.GetFromJsonAsync<QueryResult<object>>(uri).ConfigureAwait(false)
+        return await client.GetFromJsonAsync<QueryResult<GlucoseMeasurement[]>>(uri).ConfigureAwait(false)
             ?? throw new FormatException("Invalid server reply");
     }
 }

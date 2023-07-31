@@ -186,13 +186,13 @@ public enum MeasurementType
 {
     Normal = 0,
     IncludeTrend = 1,
-    Unknown2 = 2,
-    Unknown3 = 3,
+    Unknown = 2,
+    FromAlarm = 3,
 }
 
 public enum TrendArrow
 {
-    Unknown = 0,
+    NotAvailable = 0,
     DecreasingRapidly = 1,
     Decreasing = 2,
     Stable = 3,
@@ -209,21 +209,11 @@ public enum MeasurementColor
     LowAlarm = 4,
 }
 
-public record GlucoseMeasurement
+public enum MeasurementAlarmKind
 {
-    public static string TimeStampFormat => "M/d/yyyy h:m:s tt";
-
-    public string FactoryTimestamp { get; set; } = string.Empty;
-    public string Timestamp { get; set; } = string.Empty;
-    public MeasurementType Type { get; set; }
-    public int ValueInMgPerDl { get; set; }
-    public TrendArrow TrendArrow { get; set; }
-    public string? TrendMessage { get; set; }
-    public MeasurementColor MeasurementColor { get; set; }
-    public GlucoseUnit GlucoseUnits { get; set; }
-    public float Value { get; set; }
-    public bool IsHigh { get; set; }
-    public bool IsLow { get; set; }
+    NotDefined = 0,
+    LowGlucose = 1,
+    HighGlucose = 2,
 }
 
 public record PatientDevice

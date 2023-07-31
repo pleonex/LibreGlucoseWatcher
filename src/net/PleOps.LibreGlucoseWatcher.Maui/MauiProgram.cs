@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using PleOps.LibreGlucose;
 using PleOps.LibreGlucoseWatcher.Maui.Pages;
+using SkiaSharp.Views.Maui.Controls.Hosting;
 
 namespace PleOps.LibreGlucoseWatcher.Maui;
 
@@ -11,6 +12,7 @@ public static class MauiProgram
         var builder = MauiApp.CreateBuilder();
         builder
                 .UseMauiApp<App>()
+                .UseSkiaSharp(true)
                 .RegisterAppServices()
                 .RegisterViewModelsWithViews()
                 .ConfigureFonts(fonts =>
