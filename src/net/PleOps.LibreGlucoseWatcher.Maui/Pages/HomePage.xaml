@@ -7,7 +7,7 @@
              Title="LibreGlucoseWatcher"
              BackgroundColor="{StaticResource Secondary}">
     <Grid
-        RowDefinitions="150,*,Auto"
+        RowDefinitions="150,50,*,Auto"
         ColumnDefinitions="*"
         Padding="5"
         RowSpacing="5" >
@@ -16,103 +16,134 @@
             Grid.Row="0" Grid.Column="0"
             StrokeThickness="0"
             BackgroundColor="{Binding CurrentGlucoseColor}"
-            StrokeShape="RoundRectangle 20">
+            StrokeShape="RoundRectangle 8"
+            Padding="10,5" >
 
-            <VerticalStackLayout
-                Padding="15,10">
-                <Grid
-                    RowDefinitions="35,*"
-                    ColumnDefinitions="*,Auto"
-                    ColumnSpacing="10">
-                    <Label
-                        Grid.Column="0"
-                        LineBreakMode="TailTruncation"
-                        TextColor="White"
-                        FontSize="18"
-                        FontFamily="FiraSansBold"
-                        Text="{Binding PatientName}" />
-                    <Label
-                        Grid.Column="1"
-                        TextColor="White"
-                        FontSize="18"
-                        FontFamily="FiraSansBold"
-                        Text="{Binding MeasurementTime}" />
+            <Grid
+                RowDefinitions="25,*,20"
+                ColumnDefinitions="*,Auto"
+                ColumnSpacing="10">
+                <Label
+                    Grid.Row="0" Grid.Column="0"
+                    LineBreakMode="TailTruncation"
+                    TextColor="White"
+                    FontSize="18"
+                    FontFamily="FiraSansBold"
+                    Text="{Binding PatientName}" />
+                <Label
+                    Grid.Row="0" Grid.Column="1"
+                    HorizontalOptions="End"
+                    TextColor="White"
+                    FontSize="18"
+                    FontFamily="FiraSansBold"
+                    Text="{Binding MeasurementTime}" />
 
-                    <Grid 
-                        Grid.Row="1"
-                        RowDefinitions="Auto,Auto"
-                        ColumnDefinitions="*,Auto,140"
+                <Grid 
+                    Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    RowDefinitions="Auto,Auto"
+                    ColumnDefinitions="Auto,Auto,140"
+                    ColumnSpacing="7" >
+
+                    <Label
+                        Grid.Row="0" Grid.Column="0" Grid.RowSpan="2"
+                        VerticalTextAlignment="Center"
+                        HorizontalTextAlignment="End"
+                        Text="{Binding CurrentGlucose}"
+                        TextColor="White"
+                        FontFamily="FiraSansBold"
+                        FontSize="56" />
+
+                    <Label
+                        Grid.Row="0" Grid.Column="1"
+                        FontFamily="FiraSansBold"
+                        VerticalOptions="End"
                         HorizontalOptions="Center"
-                        ColumnSpacing="7" >
-
-                        <Label
-                            Grid.Row="0" Grid.Column="0" Grid.RowSpan="2"
-                            VerticalTextAlignment="Center"
-                            HorizontalTextAlignment="End"
-                            Text="{Binding CurrentGlucose}"
-                            TextColor="White"
-                            FontFamily="FiraSansBold"
-                            FontSize="56" />
-
-                        <Label
-                            Grid.Row="0" Grid.Column="1"
-                            FontFamily="FiraSansBold"
-                            VerticalOptions="End"
-                            HorizontalOptions="Center"
-                            TextColor="White"
-                            Text="{Binding CurrentTrend}"
-                            FontSize="38" />
-
-                        <Label
-                            Grid.Row="1" Grid.Column="1"
-                            FontFamily="FiraSansRegular"
-                            TextColor="White"
-                            Text="{Binding UnitText}"
-                            TranslationY="-10"
-                            VerticalOptions="Start"
-                            FontSize="16" />
-
-                        <Label
-                            Grid.Row="0" Grid.Column="2" Grid.RowSpan="2"
-                            FontFamily="FiraSansRegular"
-                            TextColor="White"
-                            HorizontalOptions="End"
-                            VerticalOptions="Center"
-                            FontSize="18"
-                            Text="{Binding PreviousMeasurementOverview}" />
-                    </Grid>
-
-                    <Button
-                        Grid.Row="1" Grid.Column="1"
-                        VerticalOptions="Start"
-                        WidthRequest="50"
-                        HeightRequest="40"
-                        BackgroundColor="Transparent"
-                        HorizontalOptions="End"
-                        FontFamily="SymbolsRegular"
-                        FontSize="18"
                         TextColor="White"
-                        BorderWidth="1"
-                        Text="&#xf0453;"
-                        Command="{Binding FetchGlucoseCommand}" />
+                        Text="{Binding CurrentTrend}"
+                        FontSize="38" />
+
                     <Label
                         Grid.Row="1" Grid.Column="1"
-                        VerticalTextAlignment="End"
-                        Margin="0,0,5,0"
-                        HorizontalOptions="End"
                         FontFamily="FiraSansRegular"
                         TextColor="White"
-                        Text="{Binding FetchTime}" />
+                        Text="{Binding UnitText}"
+                        TranslationY="-10"
+                        VerticalOptions="Start"
+                        FontSize="16" />
+
+                    <Label
+                        Grid.Row="0" Grid.Column="2" Grid.RowSpan="2"
+                        FontFamily="FiraSansRegular"
+                        TextColor="White"
+                        HorizontalOptions="End"
+                        VerticalOptions="Center"
+                        FontSize="18"
+                        Text="{Binding PreviousMeasurementOverview}" />
                 </Grid>
 
-                
-            </VerticalStackLayout>
+                <Label
+                    Grid.Row="2" Grid.Column="0"
+                    HorizontalOptions="Start"
+                    TextColor="White"
+                    FontSize="14"
+                    FontFamily="FiraSansRegular"
+                    Text="{Binding SensorEndsText}" />
+
+                <Label
+                    Grid.Row="2" Grid.Column="1"
+                    Margin="0,0,5,0"
+                    HorizontalOptions="End"
+                    FontFamily="FiraSansRegular"
+                    TextColor="White"
+                    Text="{Binding FetchTime}" />
+            </Grid>
         </Border>
 
         <Border
             Grid.Row="1" Grid.Column="0"
             StrokeThickness="0"
-            StrokeShape="RoundRectangle 24"
+            StrokeShape="RoundRectangle 20"
+            BackgroundColor="White"
+            Padding="15,5">
+
+            <Grid
+                RowDefinitions="*"
+                ColumnDefinitions="Auto,Auto"
+                ColumnSpacing="10" >
+                <Label
+                    Grid.Row="0" Grid.Column="0"
+                    VerticalTextAlignment="Center"
+                    FontFamily="FiraSansRegular"
+                    TextColor="{StaticResource Primary}"
+                    Text="{Binding SelectedGlucoseText}"
+                    Margin="0,0,10,0" />
+                <BoxView
+                    Grid.Row="0" Grid.Column="0"
+                    HorizontalOptions="End"
+                    BackgroundColor="Black"
+                    WidthRequest="1" />
+                <Label
+                    Grid.Row="0" Grid.Column="1"
+                    VerticalTextAlignment="Center"
+                    FontFamily="FiraSansRegular"
+                    TextColor="{StaticResource Primary}"
+                    Text="Today's average: TODO"
+                    Margin="0,0,5,0" />
+                <BoxView
+                    Grid.Row="0" Grid.Column="1"
+                    HorizontalOptions="End"
+                    BackgroundColor="Black"
+                    WidthRequest="1" />
+            </Grid>
+
+        </Border>
+
+        <Border
+            Grid.Row="2" Grid.Column="0"
+            StrokeThickness="0"
+            StrokeShape="RoundRectangle 20"
             BackgroundColor="White">
             <lvc:CartesianChart
                 Series="{Binding GraphData}"
@@ -123,11 +154,43 @@
             </lvc:CartesianChart>
         </Border>
 
-        <Button
-            Grid.Row="2" Grid.Column="0"
-            HeightRequest="50"
-            FontSize="Medium"
-            IsEnabled="False"
-            Text="Add note" />
+        <Grid
+            Grid.Row="3" Grid.Column="0"
+            RowDefinitions="*"
+            ColumnDefinitions="*,Auto,Auto,*"
+            ColumnSpacing="5" >
+
+            <Button
+                Grid.Row="0" Grid.Column="0"
+                HorizontalOptions="End"
+                FontSize="20"
+                FontFamily="SymbolsRegular"
+                Text="&#xf04a;"
+                Command="{Binding BackwardSelectedTimeCommand}" />
+            <DatePicker
+                Grid.Row="0" Grid.Column="1"
+                FontSize="16"
+                TextColor="{StaticResource Primary}"
+                FontFamily="FiraSansRegular"
+                BackgroundColor="White"
+                MinimumDate="{Binding FirstValueDateTime}"
+                MaximumDate="{Binding LastValueDateTime}"
+                Date="{Binding SelectedDate}" />
+            <TimePicker
+                Grid.Row="0" Grid.Column="2"
+                FontSize="16"
+                TextColor="{StaticResource Primary}"
+                VerticalOptions="Center"
+                FontFamily="FiraSansRegular"
+                BackgroundColor="White"
+                Time="{Binding SelectedTime}" />
+            <Button
+                Grid.Row="0" Grid.Column="3"
+                HorizontalOptions="Start"
+                FontSize="20"
+                FontFamily="SymbolsRegular"
+                Text="&#xf04e;"
+                Command="{Binding ForwardSelectedTimeCommand}" />
+        </Grid>
     </Grid>
 </ContentPage>
