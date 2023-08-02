@@ -11,18 +11,17 @@
         VerticalOptions="Center"
         Spacing="20">
 
-        <Image
-                Source="dotnet_bot.png"
-                Margin="0,0,0,20"
-                WidthRequest="150" />
         <Label
-               HorizontalOptions="Center"
-               VerticalOptions="End"
-               TextColor="Black"
-               Text="Loading please wait..." />
+            HorizontalOptions="Center"
+            VerticalOptions="End"
+            TextColor="{StaticResource Primary}"
+            FontSize="20"
+            FontFamily="FiraSansRegular"
+            Text="Loading, please wait..." />
         <ActivityIndicator
             IsRunning="True"
-            VerticalOptions="Start" />
+            VerticalOptions="Start"
+            Color="{StaticResource Primary}" />
 
     </VerticalStackLayout>
 </ContentPage>

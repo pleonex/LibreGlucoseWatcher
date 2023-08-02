@@ -5,16 +5,17 @@
              x:Class="PleOps.LibreGlucoseWatcher.Maui.Pages.HomePage"
              Shell.NavBarIsVisible="True"
              Title="LibreGlucoseWatcher"
-             BackgroundColor="White">
+             BackgroundColor="{StaticResource Secondary}">
     <Grid
-        RowDefinitions="150,*,70"
-        ColumnDefinitions="*">
+        RowDefinitions="150,*,Auto"
+        ColumnDefinitions="*"
+        Padding="5"
+        RowSpacing="5" >
 
         <Border
             Grid.Row="0" Grid.Column="0"
             StrokeThickness="0"
             BackgroundColor="{Binding CurrentGlucoseColor}"
-            Margin="10"
             StrokeShape="RoundRectangle 20">
 
             <VerticalStackLayout
@@ -111,8 +112,8 @@
         <Border
             Grid.Row="1" Grid.Column="0"
             StrokeThickness="0"
-            BackgroundColor="White"
-            VerticalOptions="FillAndExpand">
+            StrokeShape="RoundRectangle 24"
+            BackgroundColor="White">
             <lvc:CartesianChart
                 Series="{Binding GraphData}"
                 XAxes="{Binding GraphXAxes}"
@@ -124,7 +125,6 @@
 
         <Button
             Grid.Row="2" Grid.Column="0"
-            Margin="10"
             HeightRequest="50"
             FontSize="Medium"
             IsEnabled="False"

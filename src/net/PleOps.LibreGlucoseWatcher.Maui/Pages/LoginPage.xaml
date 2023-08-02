@@ -13,16 +13,20 @@
         ColumnSpacing="10"
         Margin="30">
         
-        <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
-            Text="Welcome!"
+        <Label
+            Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+            Text="Welcome to LibreGlucose!"
             TextColor="{StaticResource Primary}"
             FontFamily="FiraSansBold"
             FontSize="40"
             VerticalOptions="End"
             HorizontalOptions="Center" />
-        <Image Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
-            Source="dotnet_bot.png"
-            HeightRequest="75"
+        <Label
+            Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+            Text="#WeAreNotWaiting"
+            TextColor="{StaticResource Primary}"
+            FontFamily="FiraSansBold"
+            HorizontalOptions="Center"
             />
         <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
             VerticalOptions="End"
@@ -61,7 +65,8 @@
             HorizontalOptions="FillAndExpand"
             Text="{Binding Password}" />
 
-        <Button Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2"
+        <Button
+            Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2"
             HeightRequest="50"
             MaximumWidthRequest="250"
             VerticalOptions="Start"
@@ -69,9 +74,11 @@
             FontSize="18"
             Text="Login"
             Command="{Binding LoginCommand}" />
-        <ActivityIndicator Grid.Row="5" Grid.Column="0"
+        <ActivityIndicator
+            Grid.Row="5" Grid.Column="0"
             VerticalOptions="Start"
             Margin="0,15,0,0"
+            Color="{StaticResource Primary}"
             IsRunning="{Binding LoginCommand.IsRunning}" />
     </Grid>
 </ContentPage>

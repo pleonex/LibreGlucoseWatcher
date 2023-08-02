@@ -5,48 +5,58 @@
              x:Class="PleOps.LibreGlucoseWatcher.Maui.Pages.InitialSetupPage"
              Shell.NavBarIsVisible="False"
              Shell.FlyoutBehavior="Disabled"
-             BackgroundColor="{StaticResource White}"
+             BackgroundColor="{StaticResource Secondary}"
              Loaded="ContentPage_Loaded" >
 
     <Grid
         ColumnDefinitions="*"
-        RowDefinitions="Auto,Auto,Auto,Auto,50"
-        VerticalOptions="Center"
+        RowDefinitions="*,Auto,Auto,Auto,Auto,*"
+        RowSpacing="5"
         HorizontalOptions="Center">
 
         <Label
             Grid.Row="0" Grid.Column="0"
-            TextColor="Black"
-            FontFamily="FiraSansRegular"
-            Text="Glucose units:"
-               />
-        <Picker
+            TextColor="{StaticResource Primary}"
+            VerticalOptions="Center"
+            FontFamily="FiraSansBold"
+            FontSize="18"
+            Text="Initial application configuration" />
+
+        <Label
             Grid.Row="1" Grid.Column="0"
+            TextColor="{StaticResource Primary}"
+            FontFamily="FiraSansBold"
+            Text="Glucose units:" />
+        <Picker
+            Grid.Row="2" Grid.Column="0"
             Margin="0,0,0,30"
             MinimumWidthRequest="150"
             FontFamily="FiraSansRegular"
+            TextColor="{StaticResource Primary}"
             ItemsSource="{Binding GlucoseUnits}"
             SelectedIndex="{Binding SelectedUnitIdx}"/>
 
         <Label
-            Grid.Row="2" Grid.Column="0"
-            TextColor="Black"
-            FontFamily="FiraSansRegular"
+            Grid.Row="3" Grid.Column="0"
+            TextColor="{StaticResource Primary}"
+            FontFamily="FiraSansBold"
             Text="Person to monitor:"
                />
         <Picker
-            Grid.Row="3" Grid.Column="0"
+            Grid.Row="4" Grid.Column="0"
             Margin="0,0,0,30"
             MinimumWidthRequest="300"
             FontFamily="FiraSansRegular"
+            TextColor="{StaticResource Primary}"
             ItemsSource="{Binding Patients}"
             ItemDisplayBinding="{Binding FullName}"
             SelectedItem="{Binding SelectedPatient}" />
 
         <Button
-            Grid.Row="4" Grid.Column="0"
+            Grid.Row="5" Grid.Column="0"
             Text="Continue"
-            HorizontalOptions="Center"
+            VerticalOptions="Start"
+            HorizontalOptions="Start"
             WidthRequest="200"
             HeightRequest="45"
             Command="{Binding SaveAndContinueCommand}" />

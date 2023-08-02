@@ -49,6 +49,10 @@ you will need to perform a manual installation as follow:
    `monkey.jungle` must be in the top-level workspace.
 3. Run the VS Code command "_Build for Device_".
 
+## Attribution
+
+[Icon by Freepik](https://www.freepik.com/icon/tamagotchi_2946172)
+
 ## TODO
 
 Garmin:
