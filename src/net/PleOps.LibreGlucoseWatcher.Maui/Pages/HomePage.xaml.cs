@@ -1,4 +1,4 @@
-namespace PleOps.LibreGlucoseWatcher.Maui.Pages;
+﻿namespace PleOps.LibreGlucoseWatcher.Maui.Pages;
 
 public partial class HomePage : ContentPage
 {

@@ -51,7 +51,7 @@
                             Text="{Binding CurrentGlucose}"
                             TextColor="White"
                             FontFamily="FiraSansBold"
-                            FontSize="60" />
+                            FontSize="56" />
 
                         <Label
                             Grid.Row="0" Grid.Column="1"
@@ -116,7 +116,9 @@
             <lvc:CartesianChart
                 Series="{Binding GraphData}"
                 XAxes="{Binding GraphXAxes}"
-                ZoomMode="X">
+                YAxes="{Binding GraphYAxes}"
+                Sections="{Binding GraphSections}"
+                ZoomMode="PanX">
             </lvc:CartesianChart>
         </Border>
 

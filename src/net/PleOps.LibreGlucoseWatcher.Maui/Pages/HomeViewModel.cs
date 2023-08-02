@@ -2,9 +2,11 @@
 using CommunityToolkit.Mvvm.Input;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.SkiaSharpView.Painting;
 using Microsoft.Extensions.Logging;
 using PleOps.LibreGlucose;
 using PleOps.LibreGlucose.Patients;
+using SkiaSharp;
 
 namespace PleOps.LibreGlucoseWatcher.Maui.Pages;
 
@@ -53,6 +55,12 @@ public partial class HomeViewModel : ObservableObject, IDisposable
 
     [ObservableProperty]
     private Axis[] graphXAxes = Array.Empty<Axis>();
+
+    [ObservableProperty]
+    private Axis[] graphYAxes = Array.Empty<Axis>();
+
+    [ObservableProperty]
+    private RectangularSection[] graphSections = Array.Empty<RectangularSection>();
 
     public HomeViewModel(LibreGlucoseClient client, ILogger<HomeViewModel> logger)
     {
@@ -106,18 +114,58 @@ public partial class HomeViewModel : ObservableObject, IDisposable
             var measurements = graphResult.Data.GraphData.Append(graphResult.Data.Patient.GlucoseMeasurement);
 
             GraphData = new ISeries[] {
-                new LineSeries<int>
+                new LineSeries<GlucoseMeasurement>
                 {
-                    Values = measurements.Select(m => m.ValueInMgPerDl),
+                    // For some reason the type DateTimePoint breaks the tooltips, workaround use a mapper.
+                    //Values = measurements.Select(m => new DateTimePoint(m.UtcTimestamp, m.ValueInMgPerDl)),
+                    Values = measurements,
+                    Stroke = new SolidColorPaint(new SKColor(33, 150, 242)) { StrokeThickness = 4 },
+                    Fill = null,
+                    GeometryFill = null,
+                    GeometryStroke = null,
+                    LineSmoothness = 0,
+                    Mapping = (measurement, point) =>
+                        point.Coordinate = new LiveChartsCore.Kernel.Coordinate(
+                            measurement.UtcTimestamp.Ticks,
+                            measurement.ValueInMgPerDl),
                 }
             };
 
             GraphXAxes = new Axis[] {
                 new Axis
                 {
-                    Name = "Time",
-                    Labels = measurements.Select(m => m.UtcTimestamp.ToLocalTime().ToShortTimeString()).ToList(),
-                    
+                    Name = string.Empty, // takes too much space and it's obvious
+                    Labeler = tick => tick.AsDate().ToString("HH:mm"),
+                    UnitWidth = TimeSpan.FromMinutes(1).Ticks,
+                    MinLimit = (DateTime.Now - TimeSpan.FromHours(5)).Ticks,
+                    MaxLimit = (DateTime.Now + TimeSpan.FromMinutes(30)).Ticks,
+                },
+            };
+
+            GraphYAxes = new Axis[] {
+                new Axis {
+                    MinLimit = 18,
+                    MaxLimit = Math.Max(measurements.Max(x => x.ValueInMgPerDl), 306),
+                },
+            };
+
+            GraphSections = new[] {
+                new RectangularSection {
+                    Yi = patientInfo.TargetHigh,
+                    Yj = patientInfo.TargetLow,
+                    Fill = new SolidColorPaint(SKColors.LightGreen.WithAlpha(204)),
+                },
+                new RectangularSection {
+                    Yi = patientInfo.AlarmRules.High.Threshold,
+                    Yj = patientInfo.AlarmRules.High.Threshold,
+                    Fill = null,
+                    Stroke = new SolidColorPaint(SKColors.Red) { StrokeThickness = 1 },
+                },
+                new RectangularSection {
+                    Yi = patientInfo.AlarmRules.Low.Threshold,
+                    Yj = patientInfo.AlarmRules.Low.Threshold,
+                    Fill = null,
+                    Stroke = new SolidColorPaint(SKColors.Red) { StrokeThickness = 1 },
                 },
             };
         }
