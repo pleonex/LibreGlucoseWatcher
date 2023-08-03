@@ -20,7 +20,7 @@
             Padding="10,5" >
 
             <Grid
-                RowDefinitions="25,*,20"
+                RowDefinitions="Auto,Auto,*"
                 ColumnDefinitions="*,Auto"
                 ColumnSpacing="10">
                 <Label
@@ -38,12 +38,28 @@
                     FontFamily="FiraSansBold"
                     Text="{Binding MeasurementTime}" />
 
+                <Label
+                    Grid.Row="1" Grid.Column="0"
+                    LineBreakMode="TailTruncation"
+                    TextColor="White"
+                    FontSize="13"
+                    FontFamily="FiraSansRegular"
+                    Text="{Binding SensorEndsText}" />
+
+                <Label
+                    Grid.Row="1" Grid.Column="1"
+                    HorizontalOptions="End"
+                    TextColor="White"
+                    FontSize="13"
+                    FontFamily="FiraSansRegular"
+                    Text="{Binding FetchTime}" />
+
                 <Grid 
-                    Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                    Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
                     HorizontalOptions="Center"
                     VerticalOptions="Center"
                     RowDefinitions="Auto,Auto"
-                    ColumnDefinitions="Auto,Auto,140"
+                    ColumnDefinitions="Auto,Auto"
                     ColumnSpacing="7" >
 
                     <Label
@@ -53,7 +69,7 @@
                         Text="{Binding CurrentGlucose}"
                         TextColor="White"
                         FontFamily="FiraSansBold"
-                        FontSize="56" />
+                        FontSize="70" />
 
                     <Label
                         Grid.Row="0" Grid.Column="1"
@@ -62,42 +78,18 @@
                         HorizontalOptions="Center"
                         TextColor="White"
                         Text="{Binding CurrentTrend}"
-                        FontSize="38" />
+                        FontSize="40" />
 
                     <Label
                         Grid.Row="1" Grid.Column="1"
                         FontFamily="FiraSansRegular"
                         TextColor="White"
                         Text="{Binding UnitText}"
-                        TranslationY="-10"
+                        TranslationY="-7"
                         VerticalOptions="Start"
                         FontSize="16" />
-
-                    <Label
-                        Grid.Row="0" Grid.Column="2" Grid.RowSpan="2"
-                        FontFamily="FiraSansRegular"
-                        TextColor="White"
-                        HorizontalOptions="End"
-                        VerticalOptions="Center"
-                        FontSize="18"
-                        Text="{Binding PreviousMeasurementOverview}" />
                 </Grid>
 
-                <Label
-                    Grid.Row="2" Grid.Column="0"
-                    HorizontalOptions="Start"
-                    TextColor="White"
-                    FontSize="14"
-                    FontFamily="FiraSansRegular"
-                    Text="{Binding SensorEndsText}" />
-
-                <Label
-                    Grid.Row="2" Grid.Column="1"
-                    Margin="0,0,5,0"
-                    HorizontalOptions="End"
-                    FontFamily="FiraSansRegular"
-                    TextColor="White"
-                    Text="{Binding FetchTime}" />
             </Grid>
         </Border>
 
@@ -110,7 +102,7 @@
 
             <Grid
                 RowDefinitions="*"
-                ColumnDefinitions="Auto,Auto"
+                ColumnDefinitions="140,160"
                 ColumnSpacing="10" >
                 <Label
                     Grid.Row="0" Grid.Column="0"
@@ -121,18 +113,6 @@
                     Margin="0,0,10,0" />
                 <BoxView
                     Grid.Row="0" Grid.Column="0"
-                    HorizontalOptions="End"
-                    BackgroundColor="Black"
-                    WidthRequest="1" />
-                <Label
-                    Grid.Row="0" Grid.Column="1"
-                    VerticalTextAlignment="Center"
-                    FontFamily="FiraSansRegular"
-                    TextColor="{StaticResource Primary}"
-                    Text="Today's average: TODO"
-                    Margin="0,0,5,0" />
-                <BoxView
-                    Grid.Row="0" Grid.Column="1"
                     HorizontalOptions="End"
                     BackgroundColor="Black"
                     WidthRequest="1" />
@@ -150,14 +130,16 @@
                 XAxes="{Binding GraphXAxes}"
                 YAxes="{Binding GraphYAxes}"
                 Sections="{Binding GraphSections}"
-                ZoomMode="PanX">
+                TooltipPosition="Hidden"
+                ZoomMode="PanX"
+                ChartPointPointerDownCommand="{Binding ChartPointSelectedCommand}">
             </lvc:CartesianChart>
         </Border>
 
         <Grid
             Grid.Row="3" Grid.Column="0"
             RowDefinitions="*"
-            ColumnDefinitions="*,Auto,Auto,*"
+            ColumnDefinitions="*,Auto,Auto,Auto,*"
             ColumnSpacing="5" >
 
             <Button
@@ -186,6 +168,12 @@
                 Time="{Binding SelectedTime}" />
             <Button
                 Grid.Row="0" Grid.Column="3"
+                FontSize="20"
+                FontFamily="SymbolsRegular"
+                Text="&#xf43a;"
+                Command="{Binding GoToNowCommand}" />
+            <Button
+                Grid.Row="0" Grid.Column="4"
                 HorizontalOptions="Start"
                 FontSize="20"
                 FontFamily="SymbolsRegular"

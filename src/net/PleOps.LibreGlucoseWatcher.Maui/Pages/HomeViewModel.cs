@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LiveChartsCore;
+using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using Microsoft.Extensions.Logging;
@@ -48,9 +49,6 @@ public partial class HomeViewModel : ObservableObject, IDisposable
 
     [ObservableProperty]
     private string measurementTime = string.Empty;
-
-    [ObservableProperty]
-    private string previousMeasurementOverview = string.Empty;
 
     [ObservableProperty]
     private string fetchTime = string.Empty;
@@ -108,7 +106,8 @@ public partial class HomeViewModel : ObservableObject, IDisposable
     public DateTime SelectedDate {
         get => selectedDate;
         set {
-            if (SetProperty(ref selectedDate, value)) {
+            var date = value.Date;
+            if (SetProperty(ref selectedDate, date)) {
                 UpdateSelectedRegion();
             }
         }
@@ -117,7 +116,8 @@ public partial class HomeViewModel : ObservableObject, IDisposable
     public TimeSpan SelectedTime {
         get => selectedTime;
         set {
-            if (SetProperty(ref selectedTime, value)) {
+            var time = new TimeSpan(value.Hours, value.Minutes, 0);
+            if (SetProperty(ref selectedTime, time)) {
                 UpdateSelectedRegion();
             }
         }
@@ -125,7 +125,7 @@ public partial class HomeViewModel : ObservableObject, IDisposable
 
     private void UpdateSelectedRegion()
     {
-        long selectedTicks = (SelectedDate + selectedTime).Ticks;
+        long selectedTicks = (SelectedDate + SelectedTime).Ticks;
         selectedDateRegion.Xi = selectedTicks;
         selectedDateRegion.Xj = selectedTicks;
 
@@ -133,6 +133,11 @@ public partial class HomeViewModel : ObservableObject, IDisposable
         SelectedGlucoseText = glucose is null
             ? string.Empty
             : $"Selected: {glucose.ValueInMgPerDl} mg/dL";
+
+        if ((GraphXAxes.Length > 0) && ((selectedTicks > GraphXAxes[0].MaxLimit) || (selectedTicks < GraphXAxes[0].MinLimit))) {
+            GraphXAxes[0].MinLimit = selectedTicks - TimeSpan.FromHours(5).Ticks;
+            GraphXAxes[0].MaxLimit = selectedTicks + TimeSpan.FromMinutes(30).Ticks;
+        }
     }
 
     [RelayCommand]
@@ -157,6 +162,25 @@ public partial class HomeViewModel : ObservableObject, IDisposable
         } else {
             SelectedTime += TimeSpan.FromMinutes(5);
         }
+    }
+
+    [RelayCommand]
+    private void GoToNow()
+    {
+        if (currentGraphData is null) {
+            return;
+        }
+
+        SelectedTime = currentGraphData[^1].UtcTimestamp.TimeOfDay;
+        SelectedDate = currentGraphData[^1].UtcTimestamp;
+    }
+
+    [RelayCommand]
+    private void ChartPointSelected(ChartPoint point)
+    {
+        var time = point.Coordinate.SecondaryValue.AsDate();
+        SelectedTime = time.TimeOfDay;
+        SelectedDate = time.Date;
     }
 
     [RelayCommand]
@@ -188,7 +212,7 @@ public partial class HomeViewModel : ObservableObject, IDisposable
                 ? timestamp.ToLocalTime().ToShortTimeString()
                 : $"{timestamp.ToLocalTime().ToShortDateString()} {timestamp.ToLocalTime().ToShortTimeString()}";
 
-            FetchTime = $"Last check {now.ToLocalTime().ToShortTimeString()}";
+            FetchTime = $"Updated {now.ToLocalTime().ToShortTimeString()}";
 
             var sensorEnd = patientInfo.Sensor!.StartDate + TimeSpan.FromDays(14);
             var sensorRem = sensorEnd - DateTimeOffset.UtcNow;
@@ -201,13 +225,6 @@ public partial class HomeViewModel : ObservableObject, IDisposable
 
             bool hasChanged = previous is not null && previous.Timestamp != currentMeasurement.Timestamp;
             bool isFirst = previous is null;
-            if (hasChanged)
-            {
-                PreviousMeasurementOverview = $"{previous!.ValueInMgPerDl} mg/dL " +
-                    $"({currentMeasurement.ValueInMgPerDl - previous.ValueInMgPerDl:+#;-#;0})\n" +
-                    $"{previous.UtcTimestamp.ToShortTimeString()}";
-            }
-
             if (!hasChanged && !isFirst) {
                 return;
             }
@@ -250,8 +267,8 @@ public partial class HomeViewModel : ObservableObject, IDisposable
 
             GraphYAxes = new Axis[] {
                 new Axis {
-                    MinLimit = 18,
-                    MaxLimit = Math.Max(measurements.Max(x => x.ValueInMgPerDl), 306),
+                    MinLimit = Math.Min(measurements.Min(x => x.ValueInMgPerDl), 54),
+                    MaxLimit = Math.Max(measurements.Max(x => x.ValueInMgPerDl), 252),
                 },
             };
 
