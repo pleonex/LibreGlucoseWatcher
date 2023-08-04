@@ -1,4 +1,4 @@
-namespace PleOps.LibreGlucoseWatcher.Maui.Pages;
+﻿namespace PleOps.LibreGlucoseWatcher.Maui.Pages;
 
 public partial class LoginPage : ContentPage
 {
@@ -21,6 +21,6 @@ public partial class LoginPage : ContentPage
 
     private async Task OnSuccessfulLoginAsync()
     {
-        await Shell.Current.GoToAsync("//Home");
+        await Shell.Current.GoToAsync("//InitialSetup");
     }
 }
