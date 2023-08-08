@@ -176,8 +176,12 @@ public partial class HomeViewModel : ObservableObject, IDisposable
     }
 
     [RelayCommand]
-    private void ChartPointSelected(ChartPoint point)
+    private void ChartPointSelected(ChartPoint? point)
     {
+        if (point is null) {
+            return;
+        }
+
         var time = point.Coordinate.SecondaryValue.AsDate();
         SelectedTime = time.TimeOfDay;
         SelectedDate = time.Date;

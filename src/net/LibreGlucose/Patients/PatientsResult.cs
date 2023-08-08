@@ -19,8 +19,10 @@ public record PatientInfo
     /// </summary>
     public string Country { get; set; } = string.Empty;
 
-    // TODO: Unknown
-    public int Status { get; set; }
+    /// <summary>
+    /// Gets or sets the monitoring status of the patient.
+    /// </summary>
+    public MonitoringStatus Status { get; set; }
 
     /// <summary>
     /// Gets or sets the first name.
@@ -61,6 +63,12 @@ public record PatientInfo
     public GlucoseMeasurement GlucoseItem { get; set; } = new();
     public PatientDevice PatientDevice { get; set; } = new();
     public long Created { get; set; }
+}
+
+public enum MonitoringStatus
+{
+    Tracking = 0,
+    InitializingSensor = 2,
 }
 
 public record SensorInfo
