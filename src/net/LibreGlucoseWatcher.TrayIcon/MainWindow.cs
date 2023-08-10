@@ -1,4 +1,18 @@
-﻿using Microsoft.Toolkit.Uwp.Notifications;
+﻿// Copyright (C) 2023  Benito Palacios Sánchez
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+using Microsoft.Toolkit.Uwp.Notifications;
 using PleOps.LibreGlucose;
 using PleOps.LibreGlucose.Connection;
 using PleOps.LibreGlucose.Patients;
@@ -157,10 +171,10 @@ public partial class MainWindow : Form
                     });
             }
 
-            if (checkPlayMusic.Checked)
-            {
-                soundPlayer.Play();
-            }
+            // if (checkPlayMusic.Checked)
+            // {
+            //     soundPlayer.Play();
+            // }
         }
     }
 
@@ -238,22 +252,22 @@ public partial class MainWindow : Form
     {
         Show();
         ShowInTaskbar = true;
-        soundPlayer.Stop();
+        // soundPlayer.Stop();
     }
 
     private void MainWindowResizing(object sender, EventArgs e)
     {
-        if (WindowState is FormWindowState.Normal)
-        {
-            soundPlayer.Stop();
-        }
+        // if (WindowState is FormWindowState.Normal)
+        // {
+        //     soundPlayer.Stop();
+        // }
     }
 
     private void TrayIconMouseDoubleClick(object sender, MouseEventArgs e)
     {
         Show();
         ShowInTaskbar = true;
-        soundPlayer.Stop();
+        // soundPlayer.Stop();
     }
 
     private async void RefreshGlucoseTimerTick(object sender, EventArgs e)
@@ -282,9 +296,9 @@ public partial class MainWindow : Form
     {
         try
         {
-            string songId = "PleOps.LibreGlucoseWatcher.TrayIcon.Songs.Bach - Air - 30sec.wav";
-            soundPlayer.Stream = typeof(MainWindow).Assembly.GetManifestResourceStream(songId);
-            soundPlayer.Load();
+            // string songId = "PleOps.LibreGlucoseWatcher.TrayIcon.Songs.Bach - Air - 30sec.wav";
+            // soundPlayer.Stream = typeof(MainWindow).Assembly.GetManifestResourceStream(songId);
+            // soundPlayer.Load();
 
             if (!string.IsNullOrEmpty(client.Login.Token))
             {
@@ -299,7 +313,7 @@ public partial class MainWindow : Form
 
     private void MainWindow_MouseMove(object sender, MouseEventArgs e)
     {
-        soundPlayer.Stop();
+        // soundPlayer.Stop();
     }
 
     private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)

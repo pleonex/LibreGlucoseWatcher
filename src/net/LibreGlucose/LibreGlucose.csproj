@@ -2,10 +2,11 @@
 
   <PropertyGroup>
     <Description>Client for LibreView glucose monitoring data.</Description>
-    
+
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
 
+    <PackageLicenseExpression>GPL-3.0-only</PackageLicenseExpression>
     <RootNamespace>PleOps.LibreGlucose</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>

@@ -1,6 +1,5 @@
 ﻿// Ported to C# from https://www.reddit.com/r/PowerShell/comments/8wj4cu/i_wrote_a_powershell_script_that_uses_the_console/
-// Credtis to u/wrktrway and u/TheIncorrigible1 
-using System.Security.Policy;
+// Credtis to u/wrktrway and u/TheIncorrigible1
 using System.Text.RegularExpressions;
 
 namespace PleOps.LibreGlucoseWatcher.TrayIcon;
