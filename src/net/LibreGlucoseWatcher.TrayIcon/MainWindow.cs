@@ -214,26 +214,28 @@ public partial class MainWindow : Form
 
     private void UpdateTrayIcon(string glucose, string units, MeasurementColor colorId, string timestamp)
     {
-        var font = new Font(FontFamily.GenericSerif, 20);
-        string text = glucose.Replace(" ", "\n");
+        var font = new Font(FontFamily.GenericSansSerif, 23);
+        string text = glucose.Split(' ')[0];//.Replace(" ", "\n");
 
         using var dummyImage = new Bitmap(256, 256);
         using var measurementGraphic = Graphics.FromImage(dummyImage);
         SizeF textSize = measurementGraphic.MeasureString(text, font);
 
-        var image = new Bitmap((int)textSize.Width, (int)textSize.Height);
+        var size = new Size(64, 64);
+        var image = new Bitmap(size.Width, size.Height);
         var graphic = Graphics.FromImage(image);
 
         Brush color = colorId switch
         {
-            MeasurementColor.InRange => Brushes.Green,
+            MeasurementColor.InRange => Brushes.LightGreen,
             MeasurementColor.OutsideRange => Brushes.Orange,
             MeasurementColor.HighAlarm => Brushes.Red,
             MeasurementColor.LowAlarm => Brushes.Red,
             _ => Brushes.White,
         };
         graphic.FillRectangle(color, 0, 0, image.Width, image.Height);
-        graphic.DrawString(text, font, Brushes.Black, 0, 0);
+
+        graphic.DrawString(text, font, Brushes.Black, (size.Width - textSize.Width) / 2, (size.Height - textSize.Height) / 2);
 
         var icon = Icon.FromHandle(image.GetHicon());
         trayIcon.Icon = icon;
