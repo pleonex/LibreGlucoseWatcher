@@ -247,8 +247,15 @@ public partial class HomeViewModel : ObservableObject, IDisposable
                 return;
             }
 
+            var measurements = graphResult.Data.GraphData;
+
             // It seems they have a bug and the connection value is sooner than graph...
-            var measurements = graphResult.Data.GraphData.Append(graphResult.Data.Patient.GlucoseMeasurement).ToList();
+            var lastGlucPatient = graphResult.Data.Patient.GlucoseMeasurement;
+            var lastGlucGraph = graphResult.Data.GraphData[^1];
+            if (lastGlucPatient.UtcTimestamp > lastGlucGraph.UtcTimestamp) {
+                measurements = graphResult.Data.GraphData.Append(graphResult.Data.Patient.GlucoseMeasurement).ToArray();
+            }
+
             currentGraphData = measurements;
 
             if (isFirst) {
@@ -313,9 +320,13 @@ public partial class HomeViewModel : ObservableObject, IDisposable
 
             FirstValueDateTime = measurements[0].UtcTimestamp;
             LastValueDateTime = measurements[^1].UtcTimestamp;
-        }
-        catch (Exception ex)
-        {
+        } catch (HttpRequestException ex) when (ex.StatusCode is System.Net.HttpStatusCode.Unauthorized) {
+            logger.LogError(ex, "Auth required again");
+            await MainThread.InvokeOnMainThreadAsync(async () => {
+                await Shell.Current.DisplayAlert("Connection expired", "Please login again", "Ok");
+                await Shell.Current.GoToAsync("//Login");
+            });
+        } catch (Exception ex) {
             logger.LogError(ex, "Failed to fetch patient data");
         }
     }
