@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Description>Client for LibreView glucose monitoring data.</Description>
 
-    <TargetFrameworks>net6.0;net8.0</TargetFrameworks>
+    <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
 
     <PackageLicenseExpression>GPL-3.0-only</PackageLicenseExpression>
