@@ -22,7 +22,7 @@ public class LibreGlucoseClient
 {
     internal const string ApiUrl = "https://api-eu.libreview.io/";
     internal const string ApiProduct = "llu.android";
-    internal const string ApiVersion = "5.0.0";
+    internal const string ApiVersion = "4.7.0"; // 4.11 requires sending Account-Id.
 
     private readonly HttpClient client;
 
@@ -32,6 +32,7 @@ public class LibreGlucoseClient
         client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         client.DefaultRequestHeaders.Add("version", ApiVersion);
         client.DefaultRequestHeaders.Add("product", ApiProduct);
+        client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Mobile Safari/537.36");
 
         client.BaseAddress = new Uri(ApiUrl);
 

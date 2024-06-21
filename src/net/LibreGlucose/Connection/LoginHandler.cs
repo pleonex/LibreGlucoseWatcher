@@ -54,6 +54,7 @@ public class LoginHandler
     {
         string uri = "llu/auth/login";
 
+        client.DefaultRequestHeaders.Remove("Authorization");
         var result = await client.PostAsJsonAsync(uri, parameters).ConfigureAwait(false);
         _ = result.EnsureSuccessStatusCode();
 
