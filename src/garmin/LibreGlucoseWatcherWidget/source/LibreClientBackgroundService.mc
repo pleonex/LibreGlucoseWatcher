@@ -23,8 +23,8 @@ var tries = 0;
 class LibreClientBackgroundService extends System.ServiceDelegate
 {
     private var libreLinkUpUrl = "https://api-eu.libreview.io/";
-    private var userAgent = "LibreLinkUp";
-    private var libreLinkUpVersion = "5.0.0";
+    private var userAgent = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Mobile Safari/537.36";
+    private var libreLinkUpVersion = "4.7.0";
     private var libreLinkUpProduct = "llu.android";
 
     function initialize() {
@@ -93,6 +93,7 @@ class LibreClientBackgroundService extends System.ServiceDelegate
         var options = {
             :method => Communications.HTTP_REQUEST_METHOD_GET,
             :headers => {
+                "User-Agent" => userAgent,
                 "Content-Type" => Communications.REQUEST_CONTENT_TYPE_JSON,
                 "version" => libreLinkUpVersion,
                 "product" => libreLinkUpProduct,
@@ -127,6 +128,7 @@ class LibreClientBackgroundService extends System.ServiceDelegate
         var options = {
             :method => Communications.HTTP_REQUEST_METHOD_POST,
             :headers => {
+                "User-Agent" => userAgent,
                 "Content-Type" => Communications.REQUEST_CONTENT_TYPE_JSON,
                 "version" => libreLinkUpVersion,
                 "product" => libreLinkUpProduct,

@@ -60,6 +60,7 @@ public class LoginHandler
 
         var content = await result.Content.ReadFromJsonAsync<LoginResult>().ConfigureAwait(false);
 
+        // account-id: SHA-256 in hex format padded 2 bytes
         AuthenticationData = content?.Data ?? throw new InvalidOperationException("Invalid server login reply");
     }
 }
