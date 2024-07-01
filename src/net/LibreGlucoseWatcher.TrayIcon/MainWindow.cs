@@ -38,6 +38,9 @@ public partial class MainWindow : Form
         refreshGlucoseTimer.Interval = (int)boxRefreshPeriod.Value * 60 * 1000;
 
         ReadLoginToken();
+
+        WindowState = FormWindowState.Minimized;
+        ShowInTaskbar = false;
     }
 
     private void ReadLoginToken()
@@ -95,6 +98,8 @@ public partial class MainWindow : Form
         } catch (Exception ex)
         {
             labelGlucose.Text = ex.Message;
+            Show();
+            ShowInTaskbar = true;
         }
     }
 
@@ -214,14 +219,22 @@ public partial class MainWindow : Form
 
     private void UpdateTrayIcon(string glucose, string units, MeasurementColor colorId, string timestamp)
     {
-        var font = new Font(FontFamily.GenericSansSerif, 23);
         string text = glucose.Split(' ')[0];//.Replace(" ", "\n");
-
-        using var dummyImage = new Bitmap(256, 256);
-        using var measurementGraphic = Graphics.FromImage(dummyImage);
-        SizeF textSize = measurementGraphic.MeasureString(text, font);
-
         var size = new Size(64, 64);
+        int padding = 10;
+
+        Font font;
+        SizeF textSize;
+        int fontSize = 23;
+        do {
+            font = new Font(FontFamily.GenericSansSerif, fontSize);
+
+            using var dummyImage = new Bitmap(256, 256);
+            using var measurementGraphic = Graphics.FromImage(dummyImage);
+            textSize = measurementGraphic.MeasureString(text, font);
+            fontSize--;
+        } while (textSize.Width > size.Width + padding || textSize.Height > size.Height + padding);
+
         var image = new Bitmap(size.Width, size.Height);
         var graphic = Graphics.FromImage(image);
 
@@ -286,6 +299,9 @@ public partial class MainWindow : Form
         } catch (Exception ex)
         {
             labelGlucose.Invoke(() => labelGlucose.Text = ex.Message);
+
+            Show();
+            ShowInTaskbar = true;
         }
     }
 
@@ -310,6 +326,8 @@ public partial class MainWindow : Form
         } catch (Exception ex)
         {
             labelGlucose.Text = ex.Message;
+            Show();
+            ShowInTaskbar = true;
         }
     }
 
@@ -341,6 +359,8 @@ public partial class MainWindow : Form
         } catch (Exception ex)
         {
             labelGlucose.Text = ex.Message;
+            Show();
+            ShowInTaskbar = true;
         }
     }
 }

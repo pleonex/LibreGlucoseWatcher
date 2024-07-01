@@ -18,12 +18,12 @@ using System.Net.Http.Headers;
 
 namespace PleOps.LibreGlucose;
 
-public class LibreGlucoseClient
+public class LibreGlucoseClient : IDisposable
 {
-    internal const string ApiUrl = "https://api-eu.libreview.io/";
-    internal const string ApiProduct = "llu.android";
-    internal const string ApiVersion = "4.7.0"; // 4.11 requires sending Account-Id.
-    internal const string AndroidUserAgent = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Mobile Safari/537.36";
+    private const string ApiUrl = "https://api-eu.libreview.io/";
+    private const string ApiProduct = "llu.android";
+    private const string ApiVersion = "4.7.0"; // 4.11 requires sending Account-Id.
+    private const string AndroidUserAgent = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Mobile Safari/537.36";
 
     private readonly HttpClient client;
 
@@ -47,4 +47,17 @@ public class LibreGlucoseClient
     public LoginHandler Login { get; }
 
     public PatientsHandler Patients { get; }
+
+    public void Dispose()
+    {
+        GC.SuppressFinalize(this);
+        Dispose(true);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposing) {
+            client.Dispose();
+        }
+    }
 }
