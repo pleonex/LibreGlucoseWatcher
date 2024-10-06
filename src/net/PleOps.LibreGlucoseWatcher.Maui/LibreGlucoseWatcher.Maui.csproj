@@ -27,6 +27,9 @@
     <TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
 
     <Nullable>Enable</Nullable>
+
+    <!-- Temporary until VS uses 8.0.402-->
+    <WindowsSdkPackageVersion>10.0.19041.41</WindowsSdkPackageVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -47,11 +50,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.60" />
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
-    <PackageReference Include="LiveChartsCore.SkiaSharpView.Maui" Version="2.0.0-beta.900" />
+    <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.91" />
+    <PackageReference Update="Microsoft.Maui.Controls.Compatibility" Version="8.0.91" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
+    <PackageReference Include="LiveChartsCore.SkiaSharpView.Maui" Version="2.0.0-rc3.3" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
-    <PackageReference Include="Realm" Version="12.2.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -62,10 +65,6 @@
     <MauiXaml Update="**\*.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Update="Microsoft.Maui.Controls.Compatibility" Version="8.0.60" />
   </ItemGroup>
 
 </Project>

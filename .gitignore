@@ -1,6 +1,7 @@
 # Binaries
 *.prg
 *.prg.debug.xml
+out/
 
 # .NET
 bin/

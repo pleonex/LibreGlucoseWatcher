@@ -230,7 +230,7 @@ public partial class HomeViewModel : ObservableObject, IDisposable
                 ? timestamp.ToLocalTime().ToShortTimeString()
                 : $"{timestamp.ToLocalTime().ToShortDateString()} {timestamp.ToLocalTime().ToShortTimeString()}";
 
-            FetchTime = $"Updated {now.ToLocalTime().ToShortTimeString()}";
+            FetchTime = $"Refreshed {now.ToLocalTime().ToShortTimeString()}";
 
             var sensorEnd = patientInfo.Sensor!.StartDate + TimeSpan.FromDays(14);
             var sensorRem = sensorEnd - DateTimeOffset.UtcNow;
@@ -273,7 +273,7 @@ public partial class HomeViewModel : ObservableObject, IDisposable
                     LineSmoothness = 0,
                     // For some reason the type DateTimePoint breaks the tooltips, workaround use a mapper.
                     Mapping = (measurement, point) =>
-                        point.Coordinate = new LiveChartsCore.Kernel.Coordinate(
+                        new LiveChartsCore.Kernel.Coordinate(
                             measurement.UtcTimestamp.Ticks,
                             measurement.ValueInMgPerDl),
                 }
