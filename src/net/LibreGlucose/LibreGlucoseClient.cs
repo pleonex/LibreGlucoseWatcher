@@ -22,7 +22,7 @@ public class LibreGlucoseClient : IDisposable
 {
     private const string ApiUrl = "https://api-eu.libreview.io/";
     private const string ApiProduct = "llu.android";
-    private const string ApiVersion = "4.7.0"; // 4.11 requires sending Account-Id.
+    private const string ApiVersion = "4.12.0";
     private const string AndroidUserAgent = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Mobile Safari/537.36";
 
     private readonly HttpClient client;
@@ -35,7 +35,6 @@ public class LibreGlucoseClient : IDisposable
         //client.DefaultRequestHeaders.Pragma.Add(new NameValueHeaderValue("no-cache"));
         client.DefaultRequestHeaders.Add("version", ApiVersion);
         client.DefaultRequestHeaders.Add("product", ApiProduct);
-        //client.DefaultRequestHeaders.Add("Account-Id", string.Empty);
         client.DefaultRequestHeaders.UserAgent.ParseAdd(AndroidUserAgent);
 
         client.BaseAddress = new Uri(ApiUrl);

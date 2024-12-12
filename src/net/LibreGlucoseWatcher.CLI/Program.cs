@@ -32,7 +32,7 @@ try
         }
         else
         {
-            client.Login.AuthenticationData = authData;
+            client.Login.SetAuthentication(authData);
             logged = true;
             AnsiConsole.MarkupLine("[green]Valid token[/]");
         }

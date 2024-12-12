@@ -18,7 +18,6 @@ using PleOps.LibreGlucose.Connection;
 using PleOps.LibreGlucose.Patients;
 using System.Globalization;
 using System.Media;
-using System.Resources;
 
 namespace PleOps.LibreGlucoseWatcher.TrayIcon;
 
@@ -56,7 +55,7 @@ public partial class MainWindow : Form
                 File.Delete(AuthFileEncryption.AuthPath);
             } else
             {
-                client.Login.AuthenticationData = authData;
+                client.Login.SetAuthentication(authData);
                 logged = true;
                 labelToken.Text = "Valid token - No need details";
             }
@@ -287,7 +286,7 @@ public partial class MainWindow : Form
 
     private async void RefreshGlucoseTimerTick(object sender, EventArgs e)
     {
-        if (string.IsNullOrEmpty(client.Login.Token))
+        if (client.Login.AuthenticationData == null)
         {
             return;
         }
@@ -318,7 +317,7 @@ public partial class MainWindow : Form
             // soundPlayer.Stream = typeof(MainWindow).Assembly.GetManifestResourceStream(songId);
             // soundPlayer.Load();
 
-            if (!string.IsNullOrEmpty(client.Login.Token))
+            if (client.Login.AuthenticationData != null)
             {
                 await FetchGlucose().ConfigureAwait(true);
                 DisplayGlucose();
@@ -351,7 +350,7 @@ public partial class MainWindow : Form
         try
         {
 
-            if (!string.IsNullOrEmpty(client.Login.Token))
+            if (client.Login.AuthenticationData != null)
             {
                 await FetchGlucose().ConfigureAwait(true);
                 DisplayGlucose();

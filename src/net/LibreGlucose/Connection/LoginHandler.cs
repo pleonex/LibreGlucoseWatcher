@@ -14,6 +14,10 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Security.Cryptography;
+using System.Text;
+using Microsoft.IdentityModel.JsonWebTokens;
+using Microsoft.IdentityModel.Tokens;
 
 namespace PleOps.LibreGlucose.Connection;
 
@@ -30,7 +34,6 @@ namespace PleOps.LibreGlucose.Connection;
 public class LoginHandler
 {
     private readonly HttpClient client;
-
     private AuthData? authData;
 
     internal LoginHandler(HttpClient client)
@@ -38,29 +41,40 @@ public class LoginHandler
         this.client = client;
     }
 
-    public AuthData AuthenticationData
-    {
-        get => authData ?? throw new InvalidOperationException("Application is not logged");
-        set
-        {
-            authData = value;
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token);
-        }
-    }
-
-    public string Token => AuthenticationData.AuthTicket?.Token ?? throw new ArgumentNullException("Token is missing");
+    public AuthData? AuthenticationData => authData;
 
     public async Task LoginAsync(LoginParameters parameters)
     {
         string uri = "llu/auth/login";
 
         client.DefaultRequestHeaders.Remove("Authorization");
+        client.DefaultRequestHeaders.Remove("Account-Id");
         var result = await client.PostAsJsonAsync(uri, parameters).ConfigureAwait(false);
         _ = result.EnsureSuccessStatusCode();
 
         var content = await result.Content.ReadFromJsonAsync<LoginResult>().ConfigureAwait(false);
 
-        // account-id: SHA-256 in hex format padded 2 bytes
-        AuthenticationData = content?.Data ?? throw new InvalidOperationException("Invalid server login reply");
+        AuthData newAuth = content?.Data ?? throw new InvalidOperationException("Invalid server login reply");
+        SetAuthentication(newAuth);
+    }
+
+    public void SetAuthentication(AuthData newAuthentication)
+    {
+        if (newAuthentication?.AuthTicket?.Token is null) {
+            throw new Exception("Empty authentication token");
+        }
+
+        authData = newAuthentication;
+
+        string token = newAuthentication.AuthTicket.Token;
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+        // Starting 4.11: account-id
+        JsonWebToken jwt = new JsonWebTokenHandler().ReadJsonWebToken(token);
+        string jwtId = jwt.Claims.FirstOrDefault(c => c.Type == "id")?.Value ?? throw new NotSupportedException("Missing token ID");
+        byte[] jwtIdBinary = Encoding.ASCII.GetBytes(jwtId);
+        byte[] jwtIdHash = SHA256.HashData(jwtIdBinary);
+        string hexJwtIdHash = BitConverter.ToString(jwtIdHash).Replace("-", "");
+        client.DefaultRequestHeaders.Add("Account-Id", hexJwtIdHash);
     }
 }

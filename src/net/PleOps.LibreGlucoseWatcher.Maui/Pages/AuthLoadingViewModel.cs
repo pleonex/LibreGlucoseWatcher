@@ -52,7 +52,7 @@ public partial class AuthLoadingViewModel
             }
             else
             {
-                client.Login.AuthenticationData = authData;
+                client.Login.SetAuthentication(authData);
 
                 if (!string.IsNullOrEmpty(UserSettings.GetPatientId())) {
                     await FoundValidSettings.HandleAsync();
