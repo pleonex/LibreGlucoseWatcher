@@ -124,6 +124,12 @@ public partial class MainWindow : Form
 
         var patientData = lastMeasurement[(int)boxPatientId.Value];
         var measurement = patientData.GlucoseMeasurement;
+        if (measurement is null) {
+            labelGlucose.Text = "No glucose information";
+            UpdateTrayIcon("?", "", MeasurementColor.Unknown, "Measurement missing");
+            return;
+        }
+
         (var glucose, string units) = radioButtonUnitMgDl.Checked
             ? (measurement.ValueInMgPerDl, "mg/dL")
             : (measurement.Value, "mmol/L");
